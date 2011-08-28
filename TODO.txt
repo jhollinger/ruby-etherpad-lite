@@ -1,0 +1,13 @@
+Make sure Instances, Pads and Groups are working properly and have sane APIs.
+
+Make sure it's working under Ruby 1.8.7
+
+Test JSONP support
+
+Add support for SSL/HTTPS
+
+Add support for Authors
+
+Add support for Sessions
+
+Add RSpect tests
