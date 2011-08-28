@@ -132,8 +132,8 @@ module EtherpadLite
   end
 end
 
-# Look in some common places for Linux and OSX
+# Try to find the system's CA certs
 %w{/etc/ssl/certs /etc/ssl /usr/share/ssl /usr/lib/ssl /System/Library/OpenSSL /usr/local/ssl}.each do |path|
   EtherpadLite::Instance.ca_path = path and break if File.exists? path
 end
-puts %q|WARNING Unable to find your CA Certificates; HTTPS connections will *not* be verified! You may remedy this with "EtherpadLite::Instance.ca_path = '/path/to/certs'"| unless EtherpadLite::Instance.ca_path
+$stderr.puts %q|WARNING Unable to find your CA Certificates; HTTPS connections will *not* be verified! You may remedy this with "EtherpadLite::Instance.ca_path = '/path/to/certs'"| unless EtherpadLite::Instance.ca_path
