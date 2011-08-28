@@ -1,5 +1,6 @@
 require 'uri'
 require 'net/http'
+require 'net/https'
 require 'json'
 
 module EtherpadLite
@@ -13,8 +14,8 @@ module EtherpadLite
   # A EtherpadLite::Instance object represents an installation or connection to a Etherpad Lite instance.
   # 
   # eth = EtherpadLite::Instance('http://etherpad.example.com', 'sdkjghJG73ksja8')
-  # eth.secure?
-  # => false
+  # puts eth.uri.host
+  # => 'etherpad.example.com'
   class Instance
     include Padded
 
@@ -26,8 +27,16 @@ module EtherpadLite
     CODE_INVALID_METHOD = 3
     CODE_INVALID_API_KEY = 4
 
-    attr_reader :api_key
-    attr_reader :uri
+    attr_reader :uri, :api_key
+
+    # Path to the system's CA cert paths (for connecting over SSL)
+    @@ca_path = nil
+
+    # Get path to the system's CA certs
+    def self.ca_path; @@ca_path; end
+
+    # Manually set path to the system's CA certs. Use this if the location couldn't be determined automatically.
+    def self.ca_path=(path); @@ca_path = path; end
 
     # Instantiate a new Etherpad Lite Instance. The url should include the protocol (i.e. http or https).
     # If you are connecting to EtherpadLite on a different domain, you should usually use jsonp.
@@ -43,14 +52,14 @@ module EtherpadLite
 
     # Pad, Group, etc. all use this to send the HTTP API requests. The method is a URI under /api/VERSION/, and the options are URL parameters.
     def call(method, options={})
-      # Parse options
       options = {:apikey => api_key}.merge(options)
       options[:jsonp] = '?' if @jsonp == true
-      params = options.map { |a| a.join('=') }.join('&').gsub(/\s/, '%20') # Surely Net::HTTP can do a better job of this...
       # Make request
-      get = Net::HTTP::Get.new("/#{API_ROOT}/#{API_VERSION}/#{method}?#{params}")
-      resp = Net::HTTP::start(@uri.host, @uri.port) { |http| http.request(get) }
-      parse resp.body
+      http, get = Net::HTTP.new(@uri.host, @uri.port), Net::HTTP::Get.new(call_path(method, options))
+      securify http if secure?
+      response = http.request(get)
+      # Parse response
+      parse response.body
     end
 
     # Returns a Group with the given id (it is presumed to already exist).
@@ -83,6 +92,27 @@ module EtherpadLite
       self
     end
 
+    # Returns the full API path for the given method. Accepts an optional hash of url parameters.
+    def call_path(method, params=nil)
+      path = [@uri.path, API_ROOT, API_VERSION, method].compact.join('/')
+      if params
+        params = params.map { |a| a.join('=') }.join('&').gsub(/\s/, '%20') # Surely Net::HTTP can do a better job of this...
+        path << '?' << params
+      end
+      path
+    end
+
+    # Set the Net::HTTP object to SSL
+    def securify(http)
+      http.use_ssl = true
+      if @@ca_path
+        http.verify_mode = OpenSSL::SSL::VERIFY_PEER
+        http.ca_path = @@ca_path
+      else
+        http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+      end
+    end
+
     # Parses the JSON response from the server, returning the data object as a Hash with symbolized keys.
     # If the API response contains an error code, an exception is raised.
     def parse(response)
@@ -101,3 +131,9 @@ module EtherpadLite
     end
   end
 end
+
+# Look in some common places for Linux and OSX
+%w{/etc/ssl/certs /etc/ssl /usr/share/ssl /usr/lib/ssl /System/Library/OpenSSL /usr/local/ssl}.each do |path|
+  EtherpadLite::Instance.ca_path = path and break if File.exists? path
+end
+puts %q|WARNING Unable to find your CA Certificates; HTTPS connections will *not* be verified! You may remedy this with "EtherpadLite::Instance.ca_path = '/path/to/certs'"| unless EtherpadLite::Instance.ca_path

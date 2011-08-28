@@ -43,8 +43,16 @@ abstration of Etherpad Lite's API, and looks quite different from its progenitor
       puts pad_rev.text
     end
 
+=== Connecting over SSL
+
+Connecting to Etherpad Lite instances over SSL/HTTPS should "just work". If etherpad-lite can't find your CA Certificates, a warning will be printed. You may tell etherpad-lite where they are with
+
+    EtherpadeLite::Instance.ca_path = '/path/to/ca/certs'
+
+If verifying peers isn't that important to you, you may notice improved speed by setting the above to nil.
+
 == Contributing
 
-This is still in the early stages, and the API isn't stable. Authors and Sessions are still missing, as is HTTPS support, tests, and more.
+This is still in the early stages, and the API isn't stable. Authors and Sessions are still missing, as are tests and more.
 
 Contributions are welcome, particularly if they make things better. Please be sure you changes work in both Ruby 1.8.7 and Ruby 1.9.2.
