@@ -10,7 +10,7 @@ module EtherpadLite
 
   # Returns an EtherpadLite::Instance object.
   # 
-  # ether1 = EtherpadLite.connect('https://etherpad.yoursite.com', 'your api key')
+  # ether1 = EtherpadLite.connect('https://etherpad.yoursite.com[https://etherpad.yoursite.com]', 'your api key')
   # 
   # ether2 = EtherpadLite.connect(:local, File.new('/file/path/to/APIKEY.txt'))
   # 
