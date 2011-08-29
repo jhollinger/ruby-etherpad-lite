@@ -1,31 +1,28 @@
-= Etherpad Lite Client
+= Etherpad Lite Ruby Client
 
-etherpad-lite is a Ruby client for Etherpad Lite's HTTP JSON API. Etherpad Lite is a collaborative editor provided by the Etherpad Foundation. http://etherpad.org
+etherpad-lite is a Ruby client for Etherpad Lite's HTTP JSON API. Etherpad Lite is a collaborative editor provided by the Etherpad Foundation (http://etherpad.org). See https://github.com/Pita/etherpad-lite for information on how to install and configure your own Etherpad Lite instance.
 
-Initial inspriation was drawn from the fine PHP and Python client libraries. However, this is a much higher-level
-abstration of Etherpad Lite's API, and looks quite different from its progenitors. It should feel quite "Rubyish" to Rubyists; hopefully that's a good thing.
-
-== Installation
+== 1 Installation
 
     gem install etherpad-lite
 
-== Reading and writing Pads
+== 2 Basic usage
 
     require 'etherpad-lite'
 
-    # Connect to an Etherpad Lite instance
-    eth = EtherpadLite.connect('http://etherpad-lite.example.com', 'their api key')
+    # Connect to an Etherpad Lite instance. The API key can be found inside APIKEY.txt at the root of the EtherpadLite installation.
+    ether = EtherpadLite.connect('http://etherpad-lite.example.com', 'the api key')
 
     # Get a Pad (or create one if it doesn't exist)
-    pad = eth.pad('my first etherpad lite pad')
+    pad = ether.pad('my first etherpad lite pad')
 
     puts pad.text
-    => "Welcome to Etherpad Lite!\n\nThis pad text is synchronized as you type, so that everyone viewing this page sees the same text. This allows you to collaborate seamlessly on documents!\n\nEtherpad Lite on Github: http://j.mp/ep-lite\n\n\n"
+    => "Welcome to Etherpad Lite!\n\nThis pad text is synchronized as you type, so that everyone viewing..."
 
-    # This will instantly write the changes to the Etherpad server
+    # Write your the changes to the Pad
     pad.text = "What hath God wrought?"
 
-    # And this will pull the latest changes back down
+    # Pull the latest revision down
     puts pad.text
     => "What hath God wrought?"
 
@@ -43,16 +40,12 @@ abstration of Etherpad Lite's API, and looks quite different from its progenitor
       puts pad_rev.text
     end
 
-=== Connecting over SSL
+For more advanced functionality, read the full documentation at http://jordanhollinger.com/docs/ruby-etherpad-lite/.
 
-Connecting to Etherpad Lite instances over SSL/HTTPS should "just work". If etherpad-lite can't find your CA Certificates, a warning will be printed. You may tell etherpad-lite where they are with
+== 3 License
 
-    EtherpadeLite::Instance.ca_path = '/path/to/ca/certs'
+Apache License
 
-If verifying peers isn't that important to you, you may notice improved speed by setting the above to nil.
+== 4 Credit
 
-== Status
-
-This is alpha or pre-alpha, as only half of the Etherpad Lite is implemented. Notably Authors and Sessions are still missing, but they are in-progress.
-
-Contributions are welcome, particularly if they make things better. Please be sure you changes work in both Ruby 1.8.7 and Ruby 1.9.2.
+This Ruby client was loosely inspired by TomNomNom's and devjones's PHP and Python clients, found at https://github.com/TomNomNom/etherpad-lite-client and https://github.com/devjones/PyEtherpadLite.
