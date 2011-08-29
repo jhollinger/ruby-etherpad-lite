@@ -62,14 +62,14 @@ module EtherpadLite
       parse response.body
     end
 
-    # Returns a Group with the given id (it is presumed to already exist).
-    def group(id)
-      Group.new self, id
+    # Returns, creating if necessary, a Group mapped to your foreign system's group
+    def group(mapper)
+      create_group(:mapper => mapper)
     end
 
-    # Returns, creating if necessary, a Group for your given mapper (foreign system's group id).
-    def group_mapped_to(mapper)
-      create_group(:mapper => mapper)
+    # Returns a Group with the given id (it is presumed to already exist).
+    def get_group(id)
+      Group.new self, id
     end
 
     # Creates a new Group. Optionally, you may pass the :mapper option your third party system's group id.
@@ -79,6 +79,30 @@ module EtherpadLite
     #  mapper => your foreign group id
     def create_group(options={})
       Group.create self, options
+    end
+
+    # Returns, creating if necessary, a Author mapped to your foreign system's author
+    # 
+    # Options:
+    #  name => the Author's name
+    def author(mapper, options={})
+      options[:mapper] = mapper
+      create_author options
+    end
+
+    # Returns an Author with the given id (it is presumed to already exist).
+    def get_author(id)
+      Author.new self, id
+    end
+
+    # Creates a new Author. Optionally, you may pass the :mapper option your third party system's author id.
+    # This will allow you to find the Author again later using the same identifier as your foreign system.
+    # 
+    # Options:
+    #  mapper => your foreign author id
+    #  name => the Author's name
+    def create_author(options={})
+      Author.create self, options
     end
 
     # Returns true if the connection to the Etherpad Lite instance is using SSL/HTTPS.

@@ -5,7 +5,7 @@ module EtherpadLite
 
     GROUP_ID_REGEX = /^g\.[^\$]+/
     METHOD_CREATE = 'createGroup'
-    METHOD_MAPP = 'createGroupIfNotExistsFor'
+    METHOD_MAP = 'createGroupIfNotExistsFor'
     METHOD_DELETE = 'deleteGroup'
     METHOD_PADS = 'listPads'
 
@@ -19,12 +19,12 @@ module EtherpadLite
     #  mapper => your foreign group id
     def self.create(instance, options={})
       id = options[:mapper] \
-        ? instance.call(METHOD_MAPP, :groupMapper => options[:mapper])[:groupID] \
+        ? instance.call(METHOD_MAP, :groupMapper => options[:mapper])[:groupID] \
         : instance.call(METHOD_CREATE)[:groupID]
       new instance, id, options
     end
 
-    # Instantiates a Group object (presumed to already exist.)
+    # Instantiates a Group object (presumed it already exists)
     # 
     # Options:
     #  mapper => the foreign id it's mapped to
