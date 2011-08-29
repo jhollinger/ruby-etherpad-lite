@@ -9,8 +9,11 @@ module EtherpadLite
                   :public => 'http://beta.etherpad.org'}
 
   # Returns an EtherpadLite::Instance object.
+  # 
   # ether1 = EtherpadLite.connect('https://etherpad.yoursite.com', 'your api key')
+  # 
   # ether2 = EtherpadLite.connect(:local, File.new('/file/path/to/APIKEY.txt'))
+  # 
   # ether3 = EtherpadLite.connect(:public, "beta.etherpad.org's api key", :jsonp => true)
   # 
   # Options:
@@ -38,6 +41,7 @@ module EtherpadLite
   # A EtherpadLite::Instance object represents an installation or connection to a Etherpad Lite instance.
   # 
   # eth = EtherpadLite::Instance('http://etherpad.example.com', 'sdkjghJG73ksja8')
+  # 
   # puts eth.uri.host
   # => 'etherpad.example.com'
   class Instance
