@@ -51,8 +51,8 @@ Connecting to Etherpad Lite instances over SSL/HTTPS should "just work". If ethe
 
 If verifying peers isn't that important to you, you may notice improved speed by setting the above to nil.
 
-== Contributing
+== Status
 
-This is still in the early stages, and the API isn't stable. Authors and Sessions are still missing, as are tests and more.
+This is alpha or pre-alpha, as only half of the Etherpad Lite is implemented. Notably Authors and Sessions are still missing, but they are in-progress.
 
 Contributions are welcome, particularly if they make things better. Please be sure you changes work in both Ruby 1.8.7 and Ruby 1.9.2.

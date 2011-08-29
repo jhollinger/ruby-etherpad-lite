@@ -23,7 +23,7 @@ module EtherpadLite
     def self.create(instance, id, options={})
       if options[:groupID]
         method = METHOD_CREATE_IN_GROUP
-        options[:padName] = id
+        options[:padName] = degroupify_pad_id(id)
         group = Group.new instance, options[:groupID]
       else
         method = METHOD_CREATE
@@ -34,10 +34,9 @@ module EtherpadLite
       new instance, id, :group => group
     end
 
-    # Returns the Pad for the given id, creating it if necessary.
-    # This is a "wastefull" method, in the sense that it will always try to create a Pad, requiring an HTTP call.
-    def self.get_or_create(instance, id, options={})
-      create(instance, id, options) rescue new(instance, id, options)
+    # Remove the group id portion of a Group Pad's id
+    def self.degroupify_pad_id(pad_id)
+      pad_id.to_s.sub(Group::GROUP_ID_REGEX, '').sub(/^\$/, '')
     end
 
     # Instantiate a Pad. It is presumed to already exist (via Pad.create).
@@ -55,7 +54,7 @@ module EtherpadLite
     # Returns the name of the Pad. For a normal pad, this is the same as it's id. But for a Group Pad,
     # this strips away the group id part of the pad id.
     def name
-      @id.sub(Group::GROUP_ID_REGEX, '').sub(/^\$/, '')
+      @name ||= self.class.degroupify_pad_id(@id)
     end
 
     # Returns the group_id of this Pad, if any.
@@ -105,35 +104,37 @@ module EtherpadLite
     end
 
     # Returns true if this is a public Pad (opposite of private).
-    # This only applies to Pads which belong to a group.
+    # This only applies to Pads belonging to a Group.
     def public?
       @instance.call(METHOD_GET_PUBLIC, :padID => @id)[:publicStatus]
     end
 
     # Set the pad's public status to true or false (opposite of private=)
+    # This only applies to Pads belonging to a Group.
     def public=(status)
       @instance.call(METHOD_SET_PUBLIC, :padID => @id, :publicStatus => status)
     end
 
     # Returns true if this is a private Pad (opposite of public)
-    # This only applies to Pads which belong to a group.
+    # This only applies to Pads belonging to a Group.
     def private?
       not public?
     end
 
     # Set the pad's private status to true or false (opposite of public=)
+    # This only applies to Pads belonging to a Group.
     def private=(status)
       public = !status
     end
 
     # Returns true if this Pad has a password, false if not.
-    # This only applies to Pads which belong to a group.
+    # This only applies to Pads belonging to a Group.
     def password?
-      @instance.call(METHOD_PASSWORD_PROTECTED, :padID => @id)[:passwordProtection]
+      @instance.call(METHOD_PASSWORD_PROTECTED, :padID => @id)[:isPasswordProtected]
     end
 
     # Sets the Pad's password.
-    # This only applies to Pads which belong to a group.
+    # This only applies to Pads belonging to a Group.
     def password=(new_password)
       @instance.call(METHOD_SET_PASSWORD, :padID => @id, :password => new_password)
     end

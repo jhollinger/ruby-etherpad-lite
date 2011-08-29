@@ -5,7 +5,7 @@ module EtherpadLite
     # Returns the Pad with the given id, creating it if it doesn't already exist.
     # This requires an HTTP request, so if you *know* the Pad already exists, use Instance#get_pad instead.
     def pad(id, options={})
-      Pad.get_or_create instance, id, options
+      Pad.create(instance, id, options) rescue Pad.new(instance, id, options)
     end
 
     # Returns the Pad with the given id (presumed to already exist).
