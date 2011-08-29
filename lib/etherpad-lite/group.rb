@@ -35,15 +35,17 @@ module EtherpadLite
     end
 
     # Returns the Pad with the given id, creating it if it doesn't already exist.
-    # This requires an HTTP request, so if you *know* the Pad already exists, use Instance#get_pad instead.
-    def pad(id)
-      super groupify_pad_id(id), :group => self
+    # This requires an HTTP request, so if you *know* the Pad already exists, use Group#get_pad instead.
+    def pad(id, options={})
+      options[:groupID] = @id
+      super groupify_pad_id(id), options
     end
 
     # Returns the Pad with the given id (presumed to already exist).
-    # Use this instead of Instance#pad when you *know* the Pad already exists; it will save an HTTP request.
-    def get_pad(id)
-      super groupify_pad_id(id), :group => self
+    # Use this instead of Group#pad when you *know* the Pad already exists; it will save an HTTP request.
+    def get_pad(id, options={})
+      options[:group] = self
+      super groupify_pad_id(id), options
     end
 
     # Creates and returns a Pad with the given id.
@@ -52,7 +54,7 @@ module EtherpadLite
     #  text => 'initial Pad text'
     def create_pad(id, options={})
       options[:groupID] = @id
-      super id, options
+      super groupify_pad_id(id), options
     end
 
     # Returns an array of all the Pads in this Group.
