@@ -3,6 +3,7 @@ module EtherpadLite
   class Author
     METHOD_CREATE = 'createAuthor'
     METHOD_MAP = 'createAuthorIfNotExistsFor'
+    METHOD_SESSIONS = 'listSessionsOfAuthor'
 
     attr_reader :id, :instance, :name, :mapper
 
@@ -34,6 +35,23 @@ module EtherpadLite
       @id = id
       @mapper = options[:mapper]
       @name = options[:name]
+    end
+
+    # Create a new session for group that will last length_in_minutes.
+    def create_session(group, length_in_min)
+      Session.create(@instance, group.id, @id, length_in_min)
+    end
+
+    # Returns all session ids from this Author
+    def session_ids
+      s = @instance.call(METHOD_SESSIONS, :authorID => @id) || {}
+      s.keys
+    end
+
+    # Returns all sessions from this Author
+    def sessions
+      s = @instance.call(METHOD_SESSIONS, :authorID => @id) || []
+      s.map { |id,info| Session.new(@instance, id, info) }
     end
   end
 end

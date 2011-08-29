@@ -8,6 +8,7 @@ module EtherpadLite
     METHOD_MAP = 'createGroupIfNotExistsFor'
     METHOD_DELETE = 'deleteGroup'
     METHOD_PADS = 'listPads'
+    METHOD_SESSIONS = 'listSessionsOfGroup'
 
     attr_reader :id, :instance, :mapper
 
@@ -67,12 +68,29 @@ module EtherpadLite
 
     # Returns an array of all the Pad ids in this Group.
     def pad_ids
-      instance.call(METHOD_PADS, :groupID => @id)[:padIDs].keys
+      @instance.call(METHOD_PADS, :groupID => @id)[:padIDs].keys
+    end
+
+    # Create a new session for author that will last length_in_minutes.
+    def create_session(author, length_in_min)
+      Session.create(@instance, @id, author.id, length_in_min)
+    end
+
+    # Returns all session ids in this Group
+    def session_ids
+      s = @instance.call(METHOD_SESSIONS, :groupID => @id) || {}
+      s.keys
+    end
+
+    # Returns all sessions in this Group
+    def sessions
+      s = @instance.call(METHOD_SESSIONS, :groupID => @id) || []
+      s.map { |id,info| Session.new(@instance, id, info) }
     end
 
     # Deletes the Group.
     def delete
-      instance.call(METHOD_DELETE, :groupID => @id)
+      @instance.call(METHOD_DELETE, :groupID => @id)
     end
 
     private

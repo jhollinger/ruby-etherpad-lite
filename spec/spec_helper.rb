@@ -6,6 +6,7 @@ require File.dirname(__FILE__) + '/../lib/etherpad-lite/instance'
 require File.dirname(__FILE__) + '/../lib/etherpad-lite/pad'
 require File.dirname(__FILE__) + '/../lib/etherpad-lite/group'
 require File.dirname(__FILE__) + '/../lib/etherpad-lite/author'
+require File.dirname(__FILE__) + '/../lib/etherpad-lite/session'
 
 Rspec.configure do |c|
   c.mock_with :rspec

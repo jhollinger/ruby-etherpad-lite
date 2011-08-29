@@ -142,9 +142,9 @@ module EtherpadLite
       end
     end
 
-    private
-
     def instance; self; end
+
+    private
 
     # Parses the JSON response from the server, returning the data object as a Hash with symbolized keys.
     # If the API response contains an error code, an exception is raised.
