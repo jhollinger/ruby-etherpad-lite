@@ -17,6 +17,7 @@ module EtherpadLite
     # Creates and returns a Pad with the given id.
     # 
     # Options:
+    # 
     #  text => 'initial Pad text'
     def create_pad(id, options={})
       Pad.create instance, id, options

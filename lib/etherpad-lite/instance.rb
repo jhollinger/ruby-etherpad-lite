@@ -4,7 +4,7 @@ require 'net/https'
 require 'json'
 
 module EtherpadLite
-  # Hash of common Etherpad Lite instances
+  # Aliases to common Etherpad Lite hosts
   HOST_ALIASES = {:local => 'http://localhost:9001',
                   :public => 'http://beta.etherpad.org'}
 
@@ -14,11 +14,8 @@ module EtherpadLite
   # 
   # ether2 = EtherpadLite.connect(:local, File.new('/file/path/to/APIKEY.txt'))
   # 
-  # ether3 = EtherpadLite.connect(:public, "beta.etherpad.org's api key", :jsonp => true)
-  # 
-  # Options:
-  #  jsonp => true|false (default false)
-  def self.connect(host_or_alias, api_key_or_file, options={})
+  # ether3 = EtherpadLite.connect(:public, "beta.etherpad.org's api key")
+  def self.connect(host_or_alias, api_key_or_file)
     # Parse the host
     host = if host_or_alias.is_a? Symbol
       raise ArgumentError, %Q|Unknown host alias "#{host_or_alias}"| unless HOST_ALIASES.has_key? host_or_alias
@@ -26,7 +23,6 @@ module EtherpadLite
     else
       host_or_alias
     end
-
     # Parse the api key
     if api_key_or_file.is_a? File
       api_key = api_key_or_file.read
@@ -34,22 +30,16 @@ module EtherpadLite
     else
       api_key = api_key_or_file
     end
-
-    Instance.new(host, api_key, options)
+    Instance.new(host, api_key)
   end
 
-  # A EtherpadLite::Instance object represents an installation or connection to a Etherpad Lite instance.
-  # 
-  # eth = EtherpadLite::Instance('http://etherpad.example.com', 'sdkjghJG73ksja8')
-  # 
-  # puts eth.uri.host
-  # => 'etherpad.example.com'
+  # A EtherpadLite::Instance object represents an installation or connection to a Etherpad Lite installation.
   class Instance
     include Padded
 
     API_ROOT = 'api'
     API_VERSION = 1
-    CODE_OK = 0;
+    CODE_OK = 0
     CODE_INVALID_PARAMETERS = 1
     CODE_INTERNAL_ERROR = 2
     CODE_INVALID_METHOD = 3
@@ -67,26 +57,22 @@ module EtherpadLite
     def self.ca_path=(path); @@ca_path = path; end
 
     # Instantiate a new Etherpad Lite Instance. The url should include the protocol (i.e. http or https).
-    # If you are connecting to EtherpadLite on a different domain, you should usually use jsonp.
-    # 
-    # Options:
-    #  jsonp => true|false (default false)
-    def initialize(url, api_key, options={})
+    def initialize(url, api_key)
       @uri = URI.parse(url)
       raise ArgumentError, "#{url} is not a valid url" unless @uri.host and @uri.port
       @api_key = api_key
-      @jsonp = options[:jsonp] if options.has_key? :jsonp
+      reconnect!
     end
 
-    # Pad, Group, etc. all use this to send the HTTP API requests. The method is a URI under /api/VERSION/, and the options are URL parameters.
-    def call(method, options={})
-      options = {:apikey => api_key}.merge(options)
-      options[:jsonp] = '?' if @jsonp == true
-      # Make request
-      http, get = Net::HTTP.new(@uri.host, @uri.port), Net::HTTP::Get.new(call_path(method, options))
-      securify http if secure?
-      response = http.request(get)
-      # Parse response
+    # Pad, Group, etc. all use this to send the HTTP API requests.
+    def call(method, params={})
+      # Build path
+      params[:apikey] = @api_key
+      params = params.map { |p| p.join('=') }.join('&').gsub(/\s/, '%20')
+      path = [@uri.path, API_ROOT, API_VERSION, method].compact.join('/') << '?' << params
+      # Send request
+      get = Net::HTTP::Get.new(path)
+      response = @http.request(get)
       parse response.body
     end
 
@@ -104,6 +90,7 @@ module EtherpadLite
     # This will allow you to find your Group again later using the same identifier as your foreign system.
     # 
     # Options:
+    # 
     #  mapper => your foreign group id
     def create_group(options={})
       Group.create self, options
@@ -112,6 +99,7 @@ module EtherpadLite
     # Returns, creating if necessary, a Author mapped to your foreign system's author
     # 
     # Options:
+    # 
     #  name => the Author's name
     def author(mapper, options={})
       options[:mapper] = mapper
@@ -127,7 +115,9 @@ module EtherpadLite
     # This will allow you to find the Author again later using the same identifier as your foreign system.
     # 
     # Options:
+    # 
     #  mapper => your foreign author id
+    # 
     #  name => the Author's name
     def create_author(options={})
       Author.create self, options
@@ -138,32 +128,23 @@ module EtherpadLite
       @uri.port == 443
     end
 
+    # (re)Initialize the HTTP connection object
+    def reconnect!
+      @http = Net::HTTP.new(@uri.host, @uri.port)
+      if secure?
+        @http.use_ssl = true
+        if @@ca_path
+          @http.verify_mode = OpenSSL::SSL::VERIFY_PEER
+          @http.ca_path = @@ca_path
+        else
+          @http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+        end
+      end
+    end
+
     private
 
-    def instance
-      self
-    end
-
-    # Returns the full API path for the given method. Accepts an optional hash of url parameters.
-    def call_path(method, params=nil)
-      path = [@uri.path, API_ROOT, API_VERSION, method].compact.join('/')
-      if params
-        params = params.map { |a| a.join('=') }.join('&').gsub(/\s/, '%20') # Surely Net::HTTP can do a better job of this...
-        path << '?' << params
-      end
-      path
-    end
-
-    # Set the Net::HTTP object to SSL
-    def securify(http)
-      http.use_ssl = true
-      if @@ca_path
-        http.verify_mode = OpenSSL::SSL::VERIFY_PEER
-        http.ca_path = @@ca_path
-      else
-        http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-      end
-    end
+    def instance; self; end
 
     # Parses the JSON response from the server, returning the data object as a Hash with symbolized keys.
     # If the API response contains an error code, an exception is raised.
@@ -171,11 +152,7 @@ module EtherpadLite
       response = JSON.parse(response, :symbolize_names => true)
       case response[:code]
         when CODE_OK then response[:data]
-        when CODE_INVALID_PARAMETERS
-          raise ArgumentError, response[:message]
-        when CODE_INVALID_API_KEY
-          raise ArgumentError, response[:message]
-        when CODE_INVALID_METHOD
+        when CODE_INVALID_PARAMETERS, CODE_INVALID_API_KEY, CODE_INVALID_METHOD
           raise ArgumentError, response[:message]
         else
           raise StandardError, "An unknown error ocurrced while handling the response: #{response.to_s}"

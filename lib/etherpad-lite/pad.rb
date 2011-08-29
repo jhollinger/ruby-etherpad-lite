@@ -18,7 +18,9 @@ module EtherpadLite
     # Creates and returns a new Pad.
     # 
     # Options:
+    # 
     #  text => 'initial Pad text'
+    # 
     #  groupID => group id of Group new Pad should belong to
     def self.create(instance, id, options={})
       if options[:groupID]
@@ -42,7 +44,9 @@ module EtherpadLite
     # Instantiate a Pad. It is presumed to already exist (via Pad.create).
     # 
     # Options:
+    # 
     #  group
+    # 
     #  rev
     def initialize(instance, id, options={})
       @instance = instance
@@ -75,6 +79,7 @@ module EtherpadLite
     # Returns the Pad's text. Unless you specified a :rev when instantiating the Pad, or specify one here, this will return the latest revision.
     # 
     # Options:
+    # 
     #  rev => revision_number
     def text(options={})
       options[:padID] = @id

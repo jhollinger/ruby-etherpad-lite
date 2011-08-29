@@ -16,6 +16,7 @@ module EtherpadLite
     # If you pass the mapper option, the method behaves like "create group for <mapper> if it doesn't already exist".
     # 
     # Options:
+    # 
     #  mapper => your foreign group id
     def self.create(instance, options={})
       id = options[:mapper] \
@@ -27,6 +28,7 @@ module EtherpadLite
     # Instantiates a Group object (presumed it already exists)
     # 
     # Options:
+    # 
     #  mapper => the foreign id it's mapped to
     def initialize(instance, id, options={})
       @instance = instance
@@ -51,6 +53,7 @@ module EtherpadLite
     # Creates and returns a Pad with the given id.
     # 
     # Options:
+    # 
     #  text => 'initial Pad text'
     def create_pad(id, options={})
       options[:groupID] = @id
