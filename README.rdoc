@@ -2,16 +2,17 @@
 
 etherpad-lite is a Ruby client for Etherpad Lite's HTTP JSON API. Etherpad Lite is a collaborative editor provided by the Etherpad Foundation (http://etherpad.org). See https://github.com/Pita/etherpad-lite for information on how to install and configure your own Etherpad Lite instance.
 
-== 1 Installation
+== 0 Still under active development
+This client is still under active development and is not yet available through rubygems.org. This will not be the case for long.
 
+== 1 Installation
     gem install etherpad-lite
 
 == 2 Basic usage
-
     require 'etherpad-lite'
 
-    # Connect to an Etherpad Lite instance. The API key can be found inside APIKEY.txt at the root of the EtherpadLite installation.
-    ether = EtherpadLite.connect('http://etherpad-lite.example.com', 'the api key')
+    # Connect to your Etherpad Lite instance (passing no arguments will connect you to beta.etherpad.org)
+    ether = EtherpadLite.connect('http://etherpad-lite.example.com', 'your api key')
 
     # Get a Pad (or create one if it doesn't exist)
     pad = ether.pad('my first etherpad lite pad')
@@ -22,17 +23,9 @@ etherpad-lite is a Ruby client for Etherpad Lite's HTTP JSON API. Etherpad Lite 
     # Write your the changes to the Pad
     pad.text = "What hath God wrought?"
 
-    # Pull the latest revision down
-    puts pad.text
-    => "What hath God wrought?"
-
     # There are now 2 revisions!
     puts pad.revison_numbers.size
     => 2
-
-    # Revisions start at 0
-    puts pad.revison_numbers.last
-    => 1
 
     # Iterate through each revision
     pad.revisions.each do |pad_rev|
@@ -40,12 +33,11 @@ etherpad-lite is a Ruby client for Etherpad Lite's HTTP JSON API. Etherpad Lite 
       puts pad_rev.text
     end
 
-For more advanced functionality, read the full documentation at http://jordanhollinger.com/docs/ruby-etherpad-lite/.
+For more advanced functionality, read the full docs at http://jordanhollinger.com/docs/ruby-etherpad-lite/.
 
 == 3 License
-
-Apache License
+Copyright 2011 Jordan Hollinger
+Licensed under the Apache License
 
 == 4 Credit
-
 This Ruby client was loosely inspired by TomNomNom's and devjones's PHP and Python clients, found at https://github.com/TomNomNom/etherpad-lite-client and https://github.com/devjones/PyEtherpadLite.

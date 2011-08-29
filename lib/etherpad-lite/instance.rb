@@ -4,11 +4,25 @@ require 'net/https'
 require 'json'
 
 module EtherpadLite
+  # Hash of common Etherpad Lite instances
+  HOST_ALIASES = {:local => 'http://localhost:9001',
+                  :public => 'http://beta.etherpad.org'}
+
   # Returns an EtherpadLite::Instance object.
+  # ether1 = EtherpadLite.connect('https://etherpad.yoursite.com', 'your api key')
+  # ether2 = EtherpadLite.connect(:local, File.open('/file/path/to/APIKEY.txt', &:read))
+  # ether3 = EtherpadLite.connect(:public, "beta.etherpad.org's api key", :jsonp => true)
   # 
-  # eth = EtherpadLite.connect('https://etherpad.example.com', 'sdkjghJG73ksja8')
-  def self.connect(url, api_key, options={})
-    Instance.new url, api_key, options
+  # Options:
+  #  jsonp => true|false (default false)
+  def self.connect(host_or_alias, api_key, options={})
+    host = if host_or_alias.is_a? Symbol
+      raise ArgumentError, %Q|Unknown host alias "#{host_or_alias}"| unless HOST_ALIASES.has_key? host_or_alias
+      HOST_ALIASES[host_or_alias]
+    else
+      host_or_alias
+    end
+    Instance.new host, api_key, options
   end
 
   # A EtherpadLite::Instance object represents an installation or connection to a Etherpad Lite instance.
