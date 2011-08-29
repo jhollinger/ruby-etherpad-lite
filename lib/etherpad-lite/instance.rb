@@ -10,19 +10,29 @@ module EtherpadLite
 
   # Returns an EtherpadLite::Instance object.
   # ether1 = EtherpadLite.connect('https://etherpad.yoursite.com', 'your api key')
-  # ether2 = EtherpadLite.connect(:local, File.open('/file/path/to/APIKEY.txt', &:read))
+  # ether2 = EtherpadLite.connect(:local, File.new('/file/path/to/APIKEY.txt'))
   # ether3 = EtherpadLite.connect(:public, "beta.etherpad.org's api key", :jsonp => true)
   # 
   # Options:
   #  jsonp => true|false (default false)
-  def self.connect(host_or_alias, api_key, options={})
+  def self.connect(host_or_alias, api_key_or_file, options={})
+    # Parse the host
     host = if host_or_alias.is_a? Symbol
       raise ArgumentError, %Q|Unknown host alias "#{host_or_alias}"| unless HOST_ALIASES.has_key? host_or_alias
       HOST_ALIASES[host_or_alias]
     else
       host_or_alias
     end
-    Instance.new host, api_key, options
+
+    # Parse the api key
+    if api_key_or_file.is_a? File
+      api_key = api_key_or_file.read
+      api_key_or_file.close
+    else
+      api_key = api_key_or_file
+    end
+
+    Instance.new(host, api_key, options)
   end
 
   # A EtherpadLite::Instance object represents an installation or connection to a Etherpad Lite instance.
