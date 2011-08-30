@@ -6,7 +6,7 @@ Gem::Specification.new do |spec|
   spec.authors = ['Jordan Hollinger']
   spec.date = '2011-08-30'
   spec.email = 'jordan@jordanhollinger.com'
-  spec.homepage = 'http://github.com/jhollinger/etherpad-lite'
+  spec.homepage = 'http://github.com/jhollinger/ruby-etherpad-lite'
 
   spec.require_paths = ['lib']
   spec.extra_rdoc_files = %w{README.rdoc}
