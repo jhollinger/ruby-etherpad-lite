@@ -1,14 +1,8 @@
 module EtherpadLite
   # A Group of Pads
   class Group
-    include Padded
-
     GROUP_ID_REGEX = /^g\.[^\$]+/
-    METHOD_CREATE = 'createGroup'
-    METHOD_MAP = 'createGroupIfNotExistsFor'
-    METHOD_DELETE = 'deleteGroup'
-    METHOD_PADS = 'listPads'
-    METHOD_SESSIONS = 'listSessionsOfGroup'
+    include Padded
 
     attr_reader :id, :instance, :mapper
 
@@ -20,10 +14,10 @@ module EtherpadLite
     # 
     #  mapper => your foreign group id
     def self.create(instance, options={})
-      id = options[:mapper] \
-        ? instance.call(METHOD_MAP, :groupMapper => options[:mapper])[:groupID] \
-        : instance.call(METHOD_CREATE)[:groupID]
-      new instance, id, options
+      result = options[:mapper] \
+        ? instance.client.createGroupIfNotExistsFor(options[:mapper]) \
+        : instance.client.createGroup
+      new instance, result[:groupID], options
     end
 
     # Instantiates a Group object (presumed it already exists)
@@ -68,7 +62,7 @@ module EtherpadLite
 
     # Returns an array of all the Pad ids in this Group.
     def pad_ids
-      @instance.call(METHOD_PADS, :groupID => @id)[:padIDs].keys
+      @instance.client.listPads(@id)[:padIDs].keys
     end
 
     # Create a new session for author that will last length_in_minutes.
@@ -78,19 +72,19 @@ module EtherpadLite
 
     # Returns all session ids in this Group
     def session_ids
-      s = @instance.call(METHOD_SESSIONS, :groupID => @id) || {}
+      s = @instance.client.listSessionsOfGroup(@id) || {}
       s.keys
     end
 
     # Returns all sessions in this Group
     def sessions
-      s = @instance.call(METHOD_SESSIONS, :groupID => @id) || []
+      s = @instance.client.listSessionsOfGroup(@id) || {}
       s.map { |id,info| Session.new(@instance, id, info) }
     end
 
-    # Deletes the Group.
+    # Deletes the Group
     def delete
-      @instance.call(METHOD_DELETE, :groupID => @id)
+      @instance.client.deleteGroup(@id)
     end
 
     private

@@ -18,6 +18,7 @@ describe EtherpadLite::Author do
   it "should be mapped to 'Author A'" do
     author1 = @eth.create_author :mapper => 'Author A'
     author2 = @eth.author 'Author A'
+    # They should be the same
     author1.id.should == author2.id
   end
 end

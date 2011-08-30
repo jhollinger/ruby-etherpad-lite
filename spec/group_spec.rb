@@ -18,6 +18,7 @@ describe EtherpadLite::Group do
   it "should be mapped to 'Group A'" do
     group1 = @eth.create_group :mapper => 'Group A'
     group2 = @eth.group 'Group A'
+    # They should be the same
     group1.id.should == group2.id
   end
 
@@ -33,22 +34,22 @@ describe EtherpadLite::Group do
     pad.name.should == "Important Group Stuff"
   end
 
-  it "should create a Group Pad with the right name" do
+  it "should find a Group Pad with the right group" do
     group = @eth.group 'Group A'
     group.get_pad('Important Group Stuff').group_id.should == group.id
   end
 
-  it "should create a Group Pad with the right name" do
+  it "should find a Group Pad with the right id" do
     group = @eth.group 'Group A'
     group.pad_ids.should == [:"#{group.id}$Important Group Stuff"]
   end
 
-  it "should create a Group Pad with the right name" do
+  it "should find a Group Pad with the right name" do
     group = @eth.group 'Group A'
     group.pads.first.name.should == "Important Group Stuff"
   end
 
-  it "should explicitly create a group" do
+  it "should explicitly create a Group Pad" do
     group = @eth.group 'Group A'
     pad = group.create_pad 'new group pad', :text => 'abc'
     pad.text.should == "abc\n"

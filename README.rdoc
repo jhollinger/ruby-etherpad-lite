@@ -1,9 +1,8 @@
 = Etherpad Lite Ruby Client
 
-etherpad-lite is a Ruby client for Etherpad Lite's HTTP JSON API. Etherpad Lite is a collaborative editor provided by the Etherpad Foundation (http://etherpad.org). See https://github.com/Pita/etherpad-lite for information on how to install and configure your own Etherpad Lite instance.
+etherpad-lite is a Ruby client for Etherpad Lite's HTTP JSON API. Etherpad Lite is a collaborative editor provided by the Etherpad Foundation (http://etherpad.org).
 
-== 0 Still under active development
-This client is still under active development and is not yet available through rubygems.org. This will not be the case for long.
+See https://github.com/Pita/etherpad-lite for information on how to install and configure your own Etherpad Lite instance, and read https://github.com/Pita/etherpad-lite/wiki/HTTP-API for an in-depth description of Etherpad Lite's HTTP API.
 
 == 1 Installation
     gem install etherpad-lite
@@ -33,11 +32,27 @@ This client is still under active development and is not yet available through r
       puts pad_rev.text
     end
 
-For more advanced functionality, read the full docs at http://jordanhollinger.com/docs/ruby-etherpad-lite/.
+For advanced functionality (i.e. Groups, Authors, Sessions), read the full docs at http://jordanhollinger.com/docs/ruby-etherpad-lite/. Also, the RSpec tests under /spec may provide some pointers.
 
-== 3 License
+== 3 Why is the Ruby client so different from the others? What gives you the right?!?
+The PHP and Python clients are extremely thin wrappers of the HTTP API; their method names map directly to urls. The Ruby client offers a slightly higher level of abstration,
+with the goal of making Etherpad Lite integration in Ruby projects as simple, poweful, and dare I say fun, as possible.
+
+That said, there is certainly value in supporting the defacto standard set by the PHP and Python clients. With that in mind, the Ruby client is written in two layers, 
+one conforming to the other clients, and a higher-level "models" API riding on top of it.
+
+In the examples above, the "traditional" client can be accessed with
+    client = ether.client
+    client.getText('my first etherpad lite pad')
+    => {:text => "What hath God wrought?"}
+
+Or you can explicitly load only the standard client
+    require 'etherpad-lite/client'
+    client = EtherpadLite::Client.new('api key', 'http://beta.etherpad.org/api')
+
+== 4 License
 Copyright 2011 Jordan Hollinger
 Licensed under the Apache License
 
-== 4 Credit
-This Ruby client was loosely inspired by TomNomNom's and devjones's PHP and Python clients, found at https://github.com/TomNomNom/etherpad-lite-client and https://github.com/devjones/PyEtherpadLite.
+== 5 Credit
+This Ruby client was inspired by TomNomNom's and devjones's PHP and Python clients, found at https://github.com/TomNomNom/etherpad-lite-client and https://github.com/devjones/PyEtherpadLite.

@@ -1,10 +1,6 @@
 module EtherpadLite
   # An Author of Pad content
   class Author
-    METHOD_CREATE = 'createAuthor'
-    METHOD_MAP = 'createAuthorIfNotExistsFor'
-    METHOD_SESSIONS = 'listSessionsOfAuthor'
-
     attr_reader :id, :instance, :name, :mapper
 
     # Creates a new Author. Optionally, you may pass the :mapper option your third party system's author id.
@@ -17,10 +13,10 @@ module EtherpadLite
     # 
     #  name => Author's name
     def self.create(instance, options={})
-      id = options[:mapper] \
-        ? instance.call(METHOD_MAP, :groupMapper => options[:mapper])[:authorID] \
-        : instance.call(METHOD_CREATE)[:authorID]
-      new instance, id, options
+      result = options[:mapper] \
+        ? instance.client.createAuthorIfNotExistsFor(options[:mapper], options[:name]) \
+        : instance.client.createAuthor(options[:name])
+      new instance, result[:authorID], options
     end
 
     # Instantiates an Author object (presumed it already exists)
@@ -44,13 +40,13 @@ module EtherpadLite
 
     # Returns all session ids from this Author
     def session_ids
-      s = @instance.call(METHOD_SESSIONS, :authorID => @id) || {}
+      s = @instance.client.listSessionsOfAuthor(@id) || {}
       s.keys
     end
 
     # Returns all sessions from this Author
     def sessions
-      s = @instance.call(METHOD_SESSIONS, :authorID => @id) || []
+      s = @instance.client.listSessionsOfAuthor(@id) || {}
       s.map { |id,info| Session.new(@instance, id, info) }
     end
   end

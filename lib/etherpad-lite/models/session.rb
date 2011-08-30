@@ -1,17 +1,13 @@
 module EtherpadLite
   # An Etherpad Lite Session between a Group and an Author
   class Session
-    METHOD_CREATE = 'createSession'
-    METHOD_DELETE = 'deleteSession'
-    METHOD_INFO = 'getSessionInfo'
-
     attr_reader :id, :instance
 
     # Creates a new Session between a Group and an Author. The session will expire after length_in_min.
     def self.create(instance, group_id, author_id, length_in_min)
       valid_until = Time.now.to_i + length_in_min * 60
-      id = instance.call(METHOD_CREATE, :groupID => group_id, :authorID => author_id, :validUntil => valid_until)[:sessionID]
-      new instance, id
+      result = instance.client.createSession(group_id, author_id, valid_until)
+      new instance, result[:sessionID]
     end
 
     # Instantiates a Session object (presumed to already exist)
@@ -56,14 +52,14 @@ module EtherpadLite
 
     # Deletes the Session
     def delete
-      @instance.call(METHOD_DELETE, :sessionID => @id)
+      @instance.client.deleteSession(@id)
     end
 
     private
 
     # Request and cache session info from the server
     def get_info
-      @info ||= @instance.call(METHOD_INFO, :sessionID => @id)
+      @info ||= @instance.client.getSessionInfo(@id)
     end
   end
 end

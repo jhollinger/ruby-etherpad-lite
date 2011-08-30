@@ -6,10 +6,10 @@ describe EtherpadLite::Instance do
   end
 
   it "should have the right API key" do
-    @eth.api_key.should == TEST_CONFIG[:instances][:http][:api_key]
+    @eth.client.api_key.should == TEST_CONFIG[:instances][:http][:api_key]
   end
 
   it "shouldn't be secure" do
-    @eth.secure?.should == false
+    @eth.client.secure?.should == false
   end
 end
