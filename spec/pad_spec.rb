@@ -73,4 +73,9 @@ describe EtherpadLite::Pad do
     pad = @eth.get_pad 'another new pad', :rev => 1
     pad.text.should == "The initial text\n"
   end
+
+  it "should be deleted" do
+    @eth.get_pad('another new pad').delete
+    @eth.create_pad('another new pad').id.should_not == nil
+  end
 end
