@@ -10,8 +10,8 @@ See https://github.com/Pita/etherpad-lite for information on how to install and 
 == 2 Basic usage
     require 'etherpad-lite'
 
-    # Connect to your Etherpad Lite instance (passing no arguments will connect you to beta.etherpad.org)
-    ether = EtherpadLite.connect('http://etherpad-lite.example.com', 'your api key')
+    # Connect to your Etherpad Lite instance
+    ether = EtherpadLite.connect('http://etherpad-lite.example.com', 'the api key')
 
     # Get a Pad (or create one if it doesn't exist)
     pad = ether.pad('my first etherpad lite pad')
