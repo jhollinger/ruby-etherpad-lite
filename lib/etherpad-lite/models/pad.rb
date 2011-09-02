@@ -75,7 +75,7 @@ module EtherpadLite
       @instance.client.setText(@id, txt)
     end
 
-    # Returns a Range of all this Pad's revision numbers
+    # Returns an Array of all this Pad's revision numbers
     def revision_numbers
       max = @instance.client.getRevisionsCount(@id)[:revisions]
       (0..max).to_a
@@ -91,7 +91,7 @@ module EtherpadLite
       @read_only_id ||= @instance.client.getReadOnlyID(@id)[:readOnlyID]
     end
 
-    # Returns true if this is a public Pad (opposite of private).
+    # Returns true if this is a public Pad (opposite of private?).
     # This only applies to Pads belonging to a Group.
     def public?
       @instance.client.getPublicStatus(@id)[:publicStatus]
@@ -103,7 +103,7 @@ module EtherpadLite
       @instance.client.setPublicStatus(@id, status)
     end
 
-    # Returns true if this is a private Pad (opposite of public)
+    # Returns true if this is a private Pad (opposite of public?)
     # This only applies to Pads belonging to a Group.
     def private?
       not public?

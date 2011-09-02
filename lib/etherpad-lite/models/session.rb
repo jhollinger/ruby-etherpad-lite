@@ -42,10 +42,12 @@ module EtherpadLite
       get_info[:validUntil]
     end
 
+    # Returns true if the session is not expired
     def valid?
       valid_until < Time.now.to_i
     end
 
+    # Returns true if the session is expired
     def expired?
       not valid?
     end

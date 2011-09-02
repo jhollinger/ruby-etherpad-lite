@@ -8,8 +8,6 @@ module EtherpadLite
   # ether1 = EtherpadLite.connect('https://etherpad.yoursite.com[https://etherpad.yoursite.com]', 'your api key')
   # 
   # ether2 = EtherpadLite.connect(:local, File.new('/file/path/to/APIKEY.txt'))
-  # 
-  # ether3 = EtherpadLite.connect(:public, "beta.etherpad.org's api key")
   def self.connect(host_or_alias, api_key_or_file)
     # Parse the host
     host = if host_or_alias.is_a? Symbol

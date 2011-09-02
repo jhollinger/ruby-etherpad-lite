@@ -35,7 +35,7 @@ See https://github.com/Pita/etherpad-lite for information on how to install and 
 For advanced functionality (i.e. Groups, Authors, Sessions), read the full docs at http://jordanhollinger.com/docs/ruby-etherpad-lite/. Also, the RSpec tests under /spec may provide some pointers.
 
 == 3 Why is the Ruby client so different from the others? What gives you the right?!?
-The PHP and Python clients are extremely thin wrappers of the HTTP API; their method names map directly to urls. The Ruby client offers a slightly higher level of abstration,
+The PHP and Python clients are extremely thin wrappers around the HTTP API; their method names map directly to urls. The Ruby client offers a slightly higher level of abstration,
 with the goal of making Etherpad Lite integration in Ruby projects as simple, poweful, and dare I say fun, as possible.
 
 That said, there is certainly value in supporting the defacto standard set by the PHP and Python clients. With that in mind, the Ruby client is written in two layers, 

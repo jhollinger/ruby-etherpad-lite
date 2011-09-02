@@ -4,7 +4,7 @@ require 'net/https'
 require 'json'
 
 module EtherpadLite
-  # A thin wrapper over Etherpad Lite's HTTP JSON API
+  # A thin wrapper around Etherpad Lite's HTTP JSON API
   class Client
     API_VERSION = 1
 
@@ -25,7 +25,7 @@ module EtherpadLite
     # Manually set path to the system's CA certs. Use this if the location couldn't be determined automatically.
     def self.ca_path=(path); @@ca_path = path; end
 
-    # Instantiate a new Etherpad Lite Instance. The url should include the protocol (i.e. http or https).
+    # Instantiate a new Etherpad Lite Client. The url should include the protocol (i.e. http or https).
     def initialize(api_key, url='http://localhost:9001/api')
       @uri = URI.parse(url)
       raise ArgumentError, "#{url} is not a valid url" unless @uri.host and @uri.port
@@ -33,7 +33,7 @@ module EtherpadLite
       connect!
     end
 
-    # Pad, Group, etc. all use this to send the HTTP API requests.
+    # Calls the EtherpadLite API and returns the :data portion of the response Hash.
     def call(method, params={})
       # Build path
       params[:apikey] = @api_key
@@ -226,4 +226,4 @@ end
 %w{/etc/ssl/certs /etc/ssl /usr/share/ssl /usr/lib/ssl /System/Library/OpenSSL /usr/local/ssl}.each do |path|
   EtherpadLite::Client.ca_path = path and break if File.exists? path
 end
-$stderr.puts %q|WARNING Unable to find your CA Certificates; HTTPS connections will *not* be verified! You may remedy this with "EtherpadLite::Instance.ca_path = '/path/to/certs'"| unless EtherpadLite::Client.ca_path
+$stderr.puts %q|WARNING Ruby etherpad-lite client was unable to find your CA Certificates; HTTPS connections will *not* be verified! You may remedy this with "EtherpadLite::Client.ca_path = '/path/to/certs'"| unless EtherpadLite::Client.ca_path
