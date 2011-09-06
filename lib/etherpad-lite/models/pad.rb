@@ -106,13 +106,13 @@ module EtherpadLite
     # Returns true if this is a private Pad (opposite of public?)
     # This only applies to Pads belonging to a Group.
     def private?
-      not public?
+      not self.public?
     end
 
     # Set the pad's private status to true or false (opposite of public=)
     # This only applies to Pads belonging to a Group.
     def private=(status)
-      public = !status
+      self.public = !status
     end
 
     # Returns true if this Pad has a password, false if not.
