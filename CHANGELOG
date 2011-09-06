@@ -1,3 +1,8 @@
+** RELEASE 0.0.3 (09/06/2011) **
+
+* Added Instance#get_session
+* Bugfixes to sessions
+
 ** RELEASE 0.0.2 (09/05/2011) **
 
 * Bugfix to Pad#private=, documentation updates

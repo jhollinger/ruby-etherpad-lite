@@ -87,6 +87,11 @@ module EtherpadLite
       Author.create self, options
     end
 
+    # Returns a Session (presumed to already exist).
+    def get_session(session_id)
+      Session.new self, session_id
+    end
+
     def instance; self; end
   end
 end

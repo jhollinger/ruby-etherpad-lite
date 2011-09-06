@@ -44,7 +44,7 @@ module EtherpadLite
 
     # Returns true if the session is not expired
     def valid?
-      valid_until < Time.now.to_i
+      valid_until > Time.now.to_i
     end
 
     # Returns true if the session is expired
