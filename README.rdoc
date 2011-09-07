@@ -32,16 +32,61 @@ See https://github.com/Pita/etherpad-lite for information on how to install and 
       puts pad_rev.text
     end
 
-For advanced functionality (i.e. Groups, Authors, Sessions), read the full docs at http://jordanhollinger.com/docs/ruby-etherpad-lite/. Also, the RSpec tests under /spec may provide some pointers.
+Read the full docs at http://jordanhollinger.com/docs/ruby-etherpad-lite/.
 
-== 3 Why is the Ruby client so different from the others? What gives you the right?!?
+== 3 Example use in Rails
+For your view, I recommend the jQuery plugin at https://github.com/johnyma22/etherpad-lite-jquery-plugin.
+
+Add the following to your Gemfile
+  gem 'etherpad-lite'
+
+On login, create a Hash in your session to store EtherpadLite API sessions:
+  session[:ep_sessions] = {}
+
+Some example controller actions:
+
+  class EtherpadController < ApplicationController
+    def index
+      # The idea is that your users are probably members of some kind of groups.
+      # These groups can be mapped to EtherpadLite Groups. List all the user's groups.
+      @app_groups = current_user.groups
+    end
+
+    def group
+      ether = EtherpadLite.connect(:local, 'api key')
+      @app_group = YourAppGroup.find(params[:id])
+      # Map your app's group to an EtherpadLite Group
+      group = ether.group("my_app_group_#{@app_group.id}")
+      # List all the pads in group
+      @pads = group.pads
+    end
+
+    def pad
+      ether = EtherpadLite.connect(:local, 'api key')
+      # Get the EtherpadLite Group by id
+      @group = ether.get_group(params[:group_id])
+      # Get the pad
+      @pad = @group.pad(params[:pad_name])
+      # Map the user to an EtherpadLite Author
+      author = ether.author("my_app_user_#{current_user.id}")
+      # Get or create an hour-long session for this Author in this Group
+      sess = session[:ep_sessions][@group.id] ? ether.get_session(session[:ep_sessions][@group.id]) : @group.create_session(author, 60)
+      if sess.expired?
+        sess.delete
+        sess = @group.create_session(author, 60)
+      end
+      session[:ep_sessions][@group.id] = sess.id
+      # Set the EtherpadLite session cookie. This will automatically be picked up by the jQuery plugin's iframe.
+      cookies[:sessionID] = {:value => sess.id, :domain => ".yourdomain.com"}
+    end
+  end
+
+== 4 Why is the Ruby client so different from the others? What gives you the right?!?
 The PHP and Python clients are extremely thin wrappers around the HTTP API; their method names map directly to urls. The Ruby client offers a slightly higher level of abstration,
-with the goal of making Etherpad Lite integration in Ruby projects as simple, poweful, and dare I say fun, as possible.
+with the goal of making Etherpad Lite integration in Ruby projects as simple, poweful, and dare I say fun, as possible. That said, there is nothing wrong with the thinly-wrapped API.
+So in the interests of being a good citizen, the Ruby client is written in two layers, one conforming to the other clients, and a higher-level "models" API riding on top of it.
 
-That said, there is certainly value in supporting the defacto standard set by the PHP and Python clients. With that in mind, the Ruby client is written in two layers, 
-one conforming to the other clients, and a higher-level "models" API riding on top of it.
-
-In the examples above, the "traditional" client can be accessed with
+In the examples above, the "standard" client can be accessed with
     client = ether.client
     client.getText('my first etherpad lite pad')
     => {:text => "What hath God wrought?"}
@@ -50,8 +95,9 @@ Or you can explicitly load only the standard client
     require 'etherpad-lite/client'
     client = EtherpadLite::Client.new('api key', 'http://beta.etherpad.org/api')
 
-== 4 License
+== 5 License
 Copyright 2011 Jordan Hollinger
+
 Licensed under the Apache License
 
 == 5 Credit
