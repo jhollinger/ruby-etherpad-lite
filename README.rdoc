@@ -68,7 +68,7 @@ Some example controller actions:
       # Get the pad
       @pad = @group.pad(params[:pad_name])
       # Map the user to an EtherpadLite Author
-      author = ether.author("my_app_user_#{current_user.id}")
+      author = ether.author("my_app_user_#{current_user.id}", :name => current_user.name)
       # Get or create an hour-long session for this Author in this Group
       sess = session[:ep_sessions][@group.id] ? ether.get_session(session[:ep_sessions][@group.id]) : @group.create_session(author, 60)
       if sess.expired?
