@@ -69,9 +69,12 @@ describe EtherpadLite::Pad do
     pad.name.should == pad.id
   end
 
-  it "should be initialized as revision 1" do
-    pad = @eth.get_pad 'another new pad', :rev => 1
-    pad.text.should == "The initial text\n"
+  it "should be initialized as revision 0" do
+    pad = @eth.pad 'brand new pad', :text => 'Brand new text'
+    pad.text = 'Even newer text'
+    pad.text = 'Even even newer text'
+    pad = @eth.get_pad 'brand new pad', :rev => 0
+    pad.text.should == "Brand new text\n"
   end
 
   it "should be deleted" do

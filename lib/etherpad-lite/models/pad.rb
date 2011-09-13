@@ -67,6 +67,7 @@ module EtherpadLite
     # 
     #  rev => revision_number
     def text(options={})
+      options[:rev] ||= @rev unless @rev.nil?
       @instance.client.getText(@id, options[:rev])[:text]
     end
 
