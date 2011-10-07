@@ -9,7 +9,7 @@ require File.dirname(__FILE__) + '/../lib/etherpad-lite/models/group'
 require File.dirname(__FILE__) + '/../lib/etherpad-lite/models/author'
 require File.dirname(__FILE__) + '/../lib/etherpad-lite/models/session'
 
-Rspec.configure do |c|
+RSpec.configure do |c|
   c.mock_with :rspec
 end
 
