@@ -64,6 +64,11 @@ describe EtherpadLite::Pad do
     pad.revisions[1].text.should == "The initial text\n"
   end
 
+  it "should have the first revision as HTML" do
+    pad = @eth.get_pad 'another new pad'
+    pad.revisions[1].html.should == "The initial text<br>"
+  end
+
   it "should have the same name and id" do
     pad = @eth.get_pad 'another new pad'
     pad.name.should == pad.id
