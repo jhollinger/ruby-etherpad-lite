@@ -37,7 +37,7 @@ module EtherpadLite
     def call(method, params={})
       # Build path
       params[:apikey] = @api_key
-      params = params.map { |p| p.join('=') }.join('&').gsub(/\s/, '%20')
+      params = params.map { |k,v| "#{k}=#{URI.encode(v.to_s)}" }.join('&')
       path = [@uri.path, API_VERSION, method].compact.join('/') << '?' << params
       # Send request
       get = Net::HTTP::Get.new(path)
