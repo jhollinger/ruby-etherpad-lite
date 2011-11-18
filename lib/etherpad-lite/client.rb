@@ -33,15 +33,37 @@ module EtherpadLite
       connect!
     end
 
+    # Alias to "call" using the GET HTTP method
+    def get(method, params={})
+      call method, params, :get
+    end
+
+    # Alias to "call" using the POST HTTP method
+    # XXX Experimental - Etherpad Lite currently doesn't even support POST requests
+    def post(method, params={})
+      call method, params, :post
+    end
+
     # Calls the EtherpadLite API and returns the :data portion of the response Hash.
-    def call(method, params={})
-      # Build path
+    # 
+    # "method" should be a valid API method name, as a String or Symbol.
+    # 
+    # "params" should be any URL or form parameters as a Hash.
+    # 
+    # "http_method" should be :get or :post, defaults to :get.
+    # 
+    def call(method, params={}, http_method=:get)
       params[:apikey] = @api_key
-      params = params.map { |k,v| "#{k}=#{URI.encode(v.to_s)}" }.join('&')
-      path = [@uri.path, API_VERSION, method].compact.join('/') << '?' << params
-      # Send request
-      get = Net::HTTP::Get.new(path)
-      response = @http.request(get)
+      uri = [@uri.path, API_VERSION, method].compact.join('/')
+      req = case http_method
+        when :get then Net::HTTP::Get.new(uri << '?' << URI.encode_www_form(params))
+        when :post
+          post = Net::HTTP::Post.new(uri)
+          post.set_form_data(params)
+          post
+        else raise ArgumentError, "#{http_method} is not a valid HTTP method"
+      end
+      response = @http.request(req)
       handleResult response.body
     end
 
