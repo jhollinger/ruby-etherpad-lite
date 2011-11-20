@@ -39,7 +39,6 @@ module EtherpadLite
     end
 
     # Alias to "call" using the POST HTTP method
-    # XXX Experimental - Etherpad Lite currently doesn't even support POST requests
     def post(method, params={})
       call method, params, :post
     end
@@ -72,29 +71,29 @@ module EtherpadLite
 
     # Creates a new Group
     def createGroup
-      call :createGroup
+      post :createGroup
     end
 
     # Creates a new Group for groupMapper if one doesn't already exist. Helps you map your application's groups to Etherpad Lite's groups.
     def createGroupIfNotExistsFor(groupMapper)
-      call :createGroupIfNotExistsFor, :groupMapper => groupMapper
+      post :createGroupIfNotExistsFor, :groupMapper => groupMapper
     end
 
     # Deletes a group
     def deleteGroup(groupID)
-      call :deleteGroup, :groupID => groupID
+      post :deleteGroup, :groupID => groupID
     end
 
     # Returns all the Pads in the given Group
     def listPads(groupID)
-      call :listPads, :groupID => groupID
+      get :listPads, :groupID => groupID
     end
 
     # Creates a new Pad in the given Group
     def createGroupPad(groupID, padName, text=nil)
       params = {:groupID => groupID, :padName => padName}
       params[:text] = text unless text.nil?
-      call :createGroupPad, params
+      post :createGroupPad, params
     end
 
     # Authors
@@ -104,14 +103,14 @@ module EtherpadLite
     def createAuthor(name=nil)
       params = {}
       params[:name] = name unless name.nil?
-      call :createAuthor, params
+      post :createAuthor, params
     end
 
     # Creates a new Author for authorMapper if one doesn't already exist. Helps you map your application's authors to Etherpad Lite's authors.
     def createAuthorIfNotExistsFor(authorMapper, name=nil)
       params = {:authorMapper => authorMapper}
       params[:name] = name unless name.nil?
-      call :createAuthorIfNotExistsFor, params
+      post :createAuthorIfNotExistsFor, params
     end
 
     # Sessions
@@ -121,27 +120,27 @@ module EtherpadLite
 
     # Creates a new Session for the given Author in the given Group
     def createSession(groupID, authorID, validUntil)
-      call :createSession, :groupID => groupID, :authorID => authorID, :validUntil => validUntil
+      post :createSession, :groupID => groupID, :authorID => authorID, :validUntil => validUntil
     end
 
     # Deletes the given Session
     def deleteSession(sessionID)
-      call :deleteSession, :sessionID => sessionID
+      post :deleteSession, :sessionID => sessionID
     end
 
     # Returns information about the Session
     def getSessionInfo(sessionID)
-      call :getSessionInfo, :sessionID => sessionID
+      get :getSessionInfo, :sessionID => sessionID
     end
 
     # Returns all Sessions in the given Group
     def listSessionsOfGroup(groupID)
-      call :listSessionsOfGroup, :groupID => groupID
+      get :listSessionsOfGroup, :groupID => groupID
     end
 
     # Returns all Sessions belonging to the given Author
     def listSessionsOfAuthor(authorID)
-      call :listSessionsOfAuthor, :authorID => authorID
+      get :listSessionsOfAuthor, :authorID => authorID
     end
 
     # Pad content
@@ -151,19 +150,19 @@ module EtherpadLite
     def getHTML(padID, rev=nil)
       params = {:padID => padID}
       params[:rev] = rev unless rev.nil?
-      call :getHTML, params
+      get :getHTML, params
     end
 
     # Returns the text of the given Pad. Optionally pass a revision number to get the text for that revision.
     def getText(padID, rev=nil)
       params = {:padID => padID}
       params[:rev] = rev unless rev.nil?
-      call :getText, params
+      get :getText, params
     end
 
     # Sets the text of the given Pad
     def setText(padID, text)
-      call :setText, :padID => padID, :text => text
+      post :setText, :padID => padID, :text => text
     end
 
     # Pad
@@ -175,42 +174,42 @@ module EtherpadLite
     def createPad(padID, text=nil)
       params = {:padID => padID}
       params[:text] = text unless text.nil?
-      call :createPad, params
+      post :createPad, params
     end
 
     # Returns the number of revisions the given Pad contains
     def getRevisionsCount(padID)
-      call :getRevisionsCount, :padID => padID
+      get :getRevisionsCount, :padID => padID
     end
 
     # Delete the given Pad
     def deletePad(padID)
-      call :deletePad, :padID => padID
+      post :deletePad, :padID => padID
     end
 
     # Returns the Pad's read-only id
     def getReadOnlyID(padID)
-      call :getReadOnlyID, :padID => padID
+      get :getReadOnlyID, :padID => padID
     end
 
     # Sets a boolean for the public status of a Pad
     def setPublicStatus(padID, publicStatus)
-      call :setPublicStatus, :padID => padID, :publicStatus => publicStatus
+      post :setPublicStatus, :padID => padID, :publicStatus => publicStatus
     end
 
     # Gets a boolean for the public status of a Pad
     def getPublicStatus(padID)
-      call :getPublicStatus, :padID => padID
+      get :getPublicStatus, :padID => padID
     end
 
     # Sets the password on a pad
     def setPassword(padID, password)
-      call :setPassword, :padID => padID, :password => password
+      post :setPassword, :padID => padID, :password => password
     end
 
     # Returns true if the Pad has a password, false if not
     def isPasswordProtected(padID)
-      call :isPasswordProtected, :padID => padID
+      get :isPasswordProtected, :padID => padID
     end
 
     # Returns true if the connection to the Etherpad Lite instance is using SSL/HTTPS.
