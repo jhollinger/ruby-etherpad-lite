@@ -14,16 +14,15 @@ module EtherpadLite
     CODE_INVALID_METHOD = 3
     CODE_INVALID_API_KEY = 4
 
-    attr_reader :uri, :api_key
+    # A URI object containing the URL of the Etherpad Lite instance
+    attr_reader :uri
+    # The API key
+    attr_reader :api_key
 
-    # Path to the system's CA cert paths (for connecting over SSL)
-    @@ca_path = nil
-
-    # Get path to the system's CA certs
-    def self.ca_path; @@ca_path; end
-
-    # Manually set path to the system's CA certs. Use this if the location couldn't be determined automatically.
-    def self.ca_path=(path); @@ca_path = path; end
+    class << self
+      # Path to the system's CA certs (for connecting over SSL)
+      attr_accessor :ca_path
+    end
 
     # Instantiate a new Etherpad Lite Client. The url should include the protocol (i.e. http or https).
     def initialize(api_key, url='http://localhost:9001/api')
@@ -239,9 +238,9 @@ module EtherpadLite
       @http = Net::HTTP.new(@uri.host, @uri.port)
       if secure?
         @http.use_ssl = true
-        if @@ca_path
+        if self.class.ca_path
           @http.verify_mode = OpenSSL::SSL::VERIFY_PEER
-          @http.ca_path = @@ca_path
+          @http.ca_path = self.class.ca_path
         else
           @http.verify_mode = OpenSSL::SSL::VERIFY_NONE
         end
