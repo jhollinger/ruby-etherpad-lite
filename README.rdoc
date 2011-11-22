@@ -1,8 +1,8 @@
 = Etherpad Lite Ruby Client
 
-The etherpad-lite Ruby Gem is a Ruby client for Etherpad Lite's HTTP JSON API. Etherpad Lite is a collaborative editor provided by the Etherpad Foundation (http://etherpad.org).
+The etherpad-lite Ruby Gem is a Ruby client for Etherpad Lite's HTTP JSON API. Etherpad Lite is a collaborative editor provided by the {Etherpad Foundation}[http://etherpad.org].
 
-See https://github.com/Pita/etherpad-lite for information on how to install and configure your own Etherpad Lite instance, and read https://github.com/Pita/etherpad-lite/wiki/HTTP-API for an in-depth description of Etherpad Lite's HTTP API.
+See {github.com/Pita/etherpad-lite}[https://github.com/Pita/etherpad-lite] for information on how to install and configure your own Etherpad Lite instance, and read {github.com/Pita/etherpad-lite/wiki/HTTP-API}[https://github.com/Pita/etherpad-lite/wiki/HTTP-API] for an in-depth description of Etherpad Lite's HTTP API.
 
 == 1 Installation
     gem install etherpad-lite
@@ -32,10 +32,10 @@ See https://github.com/Pita/etherpad-lite for information on how to install and 
       puts pad_rev.text
     end
 
-Full docs are at http://jordanhollinger.com/docs/ruby-etherpad-lite/
+Full docs are at {jordanhollinger.com/docs/ruby-etherpad-lite/}[http://jordanhollinger.com/docs/ruby-etherpad-lite/]
 
 == 3 Example use in Rails
-For your view, I recommend the jQuery plugin at https://github.com/johnyma22/etherpad-lite-jquery-plugin.
+For your view, I recommend the jQuery plugin at {github.com/johnyma22/etherpad-lite-jquery-plugin}[https://github.com/johnyma22/etherpad-lite-jquery-plugin].
 
 Add the following to your Gemfile
   gem 'etherpad-lite'
@@ -107,4 +107,4 @@ Copyright 2011 Jordan Hollinger
 Licensed under the Apache License
 
 == 5 Credit
-This Ruby client was inspired by TomNomNom's and devjones's PHP and Python clients, found at https://github.com/TomNomNom/etherpad-lite-client and https://github.com/devjones/PyEtherpadLite.
+This Ruby client was inspired by {TomNomNom's PHP client}[https://github.com/TomNomNom/etherpad-lite-client] and {devjones's Python client}[https://github.com/devjones/PyEtherpadLite].
