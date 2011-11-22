@@ -4,6 +4,11 @@ require 'net/https'
 require 'json'
 
 module EtherpadLite
+  # An error returned by the server
+  class APIError < StandardError
+    MESSAGE = "Error while talking to the API (%s). Make sure you are running the latest version of the Etherpad Lite server. If that is not possible, try rolling this client back to an earlier version."
+  end
+
   # A thin wrapper around Etherpad Lite's HTTP JSON API
   class Client
     API_VERSION = 1
@@ -221,13 +226,17 @@ module EtherpadLite
     # Parses the JSON response from the server, returning the data object as a Hash with symbolized keys.
     # If the API response contains an error code, an exception is raised.
     def handleResult(response)
-      response = JSON.parse(response, :symbolize_names => true)
+      begin
+        response = JSON.parse(response, :symbolize_names => true)
+      rescue JSON::ParserError
+        raise APIError, APIError::MESSAGE % response
+      end
       case response[:code]
         when CODE_OK then response[:data]
         when CODE_INVALID_PARAMETERS, CODE_INVALID_API_KEY, CODE_INVALID_METHOD
           raise ArgumentError, response[:message]
         else
-          raise StandardError, "An unknown error ocurrced while handling the response: #{response.to_s}"
+          raise APIError, "An unknown error ocurrced while handling the response: #{response.to_s}"
       end
     end
 
