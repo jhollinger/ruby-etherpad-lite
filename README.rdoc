@@ -1,6 +1,6 @@
 = Etherpad Lite Ruby Client
 
-etherpad-lite is a Ruby client for Etherpad Lite's HTTP JSON API. Etherpad Lite is a collaborative editor provided by the Etherpad Foundation (http://etherpad.org).
+The etherpad-lite Ruby Gem is a Ruby client for Etherpad Lite's HTTP JSON API. Etherpad Lite is a collaborative editor provided by the Etherpad Foundation (http://etherpad.org).
 
 See https://github.com/Pita/etherpad-lite for information on how to install and configure your own Etherpad Lite instance, and read https://github.com/Pita/etherpad-lite/wiki/HTTP-API for an in-depth description of Etherpad Lite's HTTP API.
 
@@ -23,16 +23,16 @@ See https://github.com/Pita/etherpad-lite for information on how to install and 
     pad.text = "What hath God wrought?"
 
     # There are now 2 revisions!
-    puts pad.revison_numbers.size
-    => 2
+    puts pad.revision_numbers
+    => [0, 1]
 
     # Iterate through each revision
     pad.revisions.each do |pad_rev|
-      puts pad_rev.rev
+      puts "Revision #{pad_rev.rev}:"
       puts pad_rev.text
     end
 
-Read the full docs at http://jordanhollinger.com/docs/ruby-etherpad-lite/.
+Full docs are at http://jordanhollinger.com/docs/ruby-etherpad-lite/
 
 == 3 Example use in Rails
 For your view, I recommend the jQuery plugin at https://github.com/johnyma22/etherpad-lite-jquery-plugin.
@@ -46,27 +46,28 @@ On login, create a Hash in your session to store EtherpadLite API sessions:
 Some example controller actions:
 
   class EtherpadController < ApplicationController
+    # /etherpad
     def index
       # The idea is that your users are probably members of some kind of groups.
       # These groups can be mapped to EtherpadLite Groups. List all the user's groups.
       @app_groups = current_user.groups
     end
 
+    # /etherpad/groups/:id
     def group
-      ether = EtherpadLite.connect(:local, 'api key')
+      ether = EtherpadLite.connect(:local, File.new('/var/www/etherpad-lite/APIKEY.txt'))
       @app_group = YourAppGroup.find(params[:id])
-      # Map your app's group to an EtherpadLite Group
+      # Map your app's group to an EtherpadLite Group, and list all its pads
       group = ether.group("my_app_group_#{@app_group.id}")
-      # List all the pads in group
       @pads = group.pads
     end
 
+    # /etherpad/pads/:ep_group_id/:ep_pad_name
     def pad
-      ether = EtherpadLite.connect(:local, 'api key')
-      # Get the EtherpadLite Group by id
-      @group = ether.get_group(params[:group_id])
-      # Get the pad
-      @pad = @group.pad(params[:pad_name])
+      ether = EtherpadLite.connect(:local, File.new('/var/www/etherpad-lite/APIKEY.txt'))
+      # Get the EtherpadLite Group and Pad by id
+      @group = ether.get_group(params[:ep_group_id])
+      @pad = @group.pad(params[:ep_pad_name])
       # Map the user to an EtherpadLite Author
       author = ether.author("my_app_user_#{current_user.id}", :name => current_user.name)
       # Get or create an hour-long session for this Author in this Group
@@ -82,18 +83,23 @@ Some example controller actions:
   end
 
 == 4 Why is the Ruby client so different from the others? What gives you the right?!?
-The PHP and Python clients are extremely thin wrappers around the HTTP API; their method names map directly to urls. The Ruby client offers a slightly higher level of abstration,
-with the goal of making Etherpad Lite integration in Ruby projects as simple, poweful, and dare I say fun, as possible. That said, there is nothing wrong with the thinly-wrapped API.
-So in the interests of being a good citizen, the Ruby client is written in two layers, one conforming to the other clients, and a higher-level "models" API riding on top of it.
+Most of the EPL clients are extremely thin wrappers around the HTTP API. The Ruby client offers a slightly higher level of abstraction,
+with the goal of making it as simple, powerful, and dare I say fun, as possible. That said, there are times when a bare-bones client may be 
+preferable. In a hopefully not misguided attempt to please everyone, the Ruby client is written in two layers:
+- A high-level "models" interface (above)
+- A low-level client matching the HTTP API (below)
 
-In the examples above, the "standard" client can be accessed with
+In the examples above, the low-level client is accessible from the high-level interface:
     client = ether.client
     client.getText('my first etherpad lite pad')
     => {:text => "What hath God wrought?"}
 
-Or you can explicitly load only the standard client
+or you can explicitly load just the low-level client:
     require 'etherpad-lite/client'
     client = EtherpadLite::Client.new('api key', 'http://beta.etherpad.org/api')
+
+The methods available to the low-level client should precisely match the HTTP API. In general, it behaves identically to the other
+clients, particularly PHP's and Python's.
 
 == 5 License
 Copyright 2011 Jordan Hollinger
