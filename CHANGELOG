@@ -1,3 +1,10 @@
+** RELEASE 0.1.0 (Pending) **
+
+* Requires Etherpad Lite 1.1+
+* Added support for get/setHTML
+* Uses POST for API calls which alter data - this allows much larger pad content to be written
+* Various minor improvements and bugfixes
+
 ** RELEASE 0.0.4 (09/12/2011) **
 
 * Bugfix to Pads. A Pad initialied with a specific revision was not returning that revision's text.
