@@ -150,13 +150,6 @@ module EtherpadLite
     # Pad content
     # Pad content can be updated and retrieved through the API
 
-    # Returns the text of the given Pad as HTML. Optionally pass a revision number to get the HTML for that revision.
-    def getHTML(padID, rev=nil)
-      params = {:padID => padID}
-      params[:rev] = rev unless rev.nil?
-      get :getHTML, params
-    end
-
     # Returns the text of the given Pad. Optionally pass a revision number to get the text for that revision.
     def getText(padID, rev=nil)
       params = {:padID => padID}
@@ -167,6 +160,18 @@ module EtherpadLite
     # Sets the text of the given Pad
     def setText(padID, text)
       post :setText, :padID => padID, :text => text
+    end
+
+    # Returns the text of the given Pad as HTML. Optionally pass a revision number to get the HTML for that revision.
+    def getHTML(padID, rev=nil)
+      params = {:padID => padID}
+      params[:rev] = rev unless rev.nil?
+      get :getHTML, params
+    end
+
+    # Sets the HTML text of the given Pad
+    def setHTML(padID, html)
+      post :setHTML, :padID => padID, :html => html
     end
 
     # Pad

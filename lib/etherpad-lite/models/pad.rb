@@ -61,16 +61,6 @@ module EtherpadLite
       @group ||= Group.new(@instance, group_id)
     end
 
-    # Returns the Pad's text as HTML. Unless you specified a :rev when instantiating the Pad, or specify one here, this will return the latest revision.
-    # 
-    # Options:
-    # 
-    #  rev => revision_number
-    def html(options={})
-      options[:rev] ||= @rev unless @rev.nil?
-      @instance.client.getHTML(@id, options[:rev])[:html]
-    end
-
     # Returns the Pad's text. Unless you specified a :rev when instantiating the Pad, or specify one here, this will return the latest revision.
     # 
     # Options:
@@ -84,6 +74,21 @@ module EtherpadLite
     # Writes txt to the Pad. There is no 'save' method; it is written immediately.
     def text=(txt)
       @instance.client.setText(@id, txt)
+    end
+
+    # Returns the Pad's text as HTML. Unless you specified a :rev when instantiating the Pad, or specify one here, this will return the latest revision.
+    # 
+    # Options:
+    # 
+    #  rev => revision_number
+    def html(options={})
+      options[:rev] ||= @rev unless @rev.nil?
+      @instance.client.getHTML(@id, options[:rev])[:html]
+    end
+
+    # Writes HTML to the Pad. There is no 'save' method; it is written immediately.
+    def html=(html)
+      @instance.client.setHTML(@id, html)
     end
 
     # Returns an Array of all this Pad's revision numbers

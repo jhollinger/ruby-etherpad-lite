@@ -54,6 +54,12 @@ describe EtherpadLite::Pad do
     pad.revision_numbers.last == 2
   end
 
+  it "should set HTML" do
+    pad = @eth.get_pad 'another new pad'
+    pad.html = "<p>Here's some HTML</p>"
+    pad.html.should == "Here's some HTML<br>"
+  end
+
   it "should have the first revision" do
     pad = @eth.get_pad 'another new pad'
     pad.text(:rev => 1).should == "The initial text\n"
