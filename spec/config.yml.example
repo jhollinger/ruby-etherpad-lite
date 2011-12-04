@@ -1,9 +1,4 @@
-:instances:
-  :http:
-    :url: http://localhost:9001
-    :api_key: your api key
-
-  # Uncomment to test https connections
-  #:https:
-  #  :url: https://localhost:9001
-  #  :api_key: api key
+:url: http://localhost:9001
+:api_key: your api key
+# Full filesystem path to APIKEY.txt, may be used instead of the above :api_key setting
+:api_key_file:

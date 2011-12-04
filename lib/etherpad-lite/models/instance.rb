@@ -37,7 +37,12 @@ module EtherpadLite
 
       # Parse the api key
       if api_key_or_file.is_a? File
-        api_key = api_key_or_file.read
+        api_key = begin
+          api_key_or_file.read
+        rescue IOError
+          api_key_or_file.reopen(api_key_or_file, mode='r')
+          api_key_or_file.read
+        end
         api_key_or_file.close
       else
         api_key = api_key_or_file
