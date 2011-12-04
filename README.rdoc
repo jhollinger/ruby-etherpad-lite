@@ -4,10 +4,10 @@ The etherpad-lite Ruby Gem is a Ruby client for Etherpad Lite's HTTP JSON API. E
 
 See {github.com/Pita/etherpad-lite}[https://github.com/Pita/etherpad-lite] for information on how to install and configure your own Etherpad Lite instance, and read {github.com/Pita/etherpad-lite/wiki/HTTP-API}[https://github.com/Pita/etherpad-lite/wiki/HTTP-API] for an in-depth description of Etherpad Lite's HTTP API.
 
-== 1 Installation
+== Installation
     gem install etherpad-lite
 
-== 2 Basic usage
+== Basic usage
     require 'etherpad-lite'
 
     # Connect to your Etherpad Lite instance
@@ -34,7 +34,7 @@ See {github.com/Pita/etherpad-lite}[https://github.com/Pita/etherpad-lite] for i
 
 Full docs are at {jordanhollinger.com/docs/ruby-etherpad-lite/}[http://jordanhollinger.com/docs/ruby-etherpad-lite/]
 
-== 3 Example use in Rails
+== Example use in Rails
 For your view, I recommend the jQuery plugin at {github.com/johnyma22/etherpad-lite-jquery-plugin}[https://github.com/johnyma22/etherpad-lite-jquery-plugin].
 
 Add the following to your Gemfile
@@ -82,7 +82,7 @@ Some example controller actions:
     end
   end
 
-== 4 Why is the Ruby client so different from the others? What gives you the right?!?
+== Why is the Ruby client so different from the others? What gives you the right?!?
 Most of the EPL clients are extremely thin wrappers around the HTTP API. The Ruby client offers a slightly higher level of abstraction,
 with the goal of making it as simple, powerful, and dare I say fun, as possible. That said, there are times when a bare-bones client may be 
 preferable. In a hopefully not misguided attempt to please everyone, the Ruby client is written in two layers:
@@ -101,10 +101,10 @@ or you can explicitly load just the low-level client:
 The methods available to the low-level client should precisely match the HTTP API. In general, it behaves identically to the other
 clients, particularly PHP's and Python's.
 
-== 5 License
+== License
 Copyright 2011 Jordan Hollinger
 
 Licensed under the Apache License
 
-== 5 Credit
+== Credit
 This Ruby client was inspired by {TomNomNom's PHP client}[https://github.com/TomNomNom/etherpad-lite-client] and {devjones's Python client}[https://github.com/devjones/PyEtherpadLite].
