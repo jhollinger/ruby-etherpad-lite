@@ -101,6 +101,19 @@ or you can explicitly load just the low-level client:
 The methods available to the low-level client should precisely match the HTTP API. In general, it behaves identically to the other
 clients, particularly PHP's and Python's.
 
+== Testing
+Testing this library is fairly simple. It requires:
+- A recent version of Rspec
+- A running copy of Etherpad Lite with a fresh db for each run of the tests (configure connection in spec/config.yml)
+
+Bring up Etherpad Lite with:
+
+    rm var/dirty.db && bin/run.sh
+
+Run the tests with
+
+    rspec spec
+
 == License
 Copyright 2011 Jordan Hollinger
 
