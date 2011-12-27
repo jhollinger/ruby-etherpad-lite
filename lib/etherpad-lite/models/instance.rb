@@ -3,7 +3,9 @@ module EtherpadLite
   # 
   # ether1 = EtherpadLite.connect('https://etherpad.yoursite.com[https://etherpad.yoursite.com]', 'your api key')
   # 
-  # ether2 = EtherpadLite.connect(:local, File.new('/file/path/to/APIKEY.txt'))
+  # ether2 = EtherpadLite.connect(:local, File.new('/path/to/APIKEY.txt'))
+  # 
+  # ether3 = EtherpadLite::Client.new(9001, File.new('/path/to/APIKEY.txt'))
   def self.connect(host_or_alias, api_key_or_file)
     Instance.new(host_or_alias, api_key_or_file)
   end
@@ -11,13 +13,6 @@ module EtherpadLite
   # EtherpadLite::Instance provides a high-level interface to an Etherpad Lite system.
   class Instance
     include Padded
-    # Aliases to common Etherpad Lite hosts
-    HOST_ALIASES = {:local => 'http://localhost:9001',
-                    :localhost => 'http://localhost:9001'}
-
-    # The API URI
-    API_ROOT = 'api'
-
     # Stores the EtherpadLite::Client object used to power this Instance
     attr_reader :client
 
@@ -25,30 +20,11 @@ module EtherpadLite
     # 
     # ether1 = EtherpadLite.connect('https://etherpad.yoursite.com[https://etherpad.yoursite.com]', 'your api key')
     # 
-    # ether2 = EtherpadLite.connect(:local, File.new('/file/path/to/APIKEY.txt'))
+    # ether2 = EtherpadLite.connect(:local, File.new('/path/to/APIKEY.txt'))
+    # 
+    # ether3 = EtherpadLite::Client.new(9001, File.new('/path/to/APIKEY.txt'))
     def initialize(host_or_alias, api_key_or_file)
-      # Parse the host
-      host = if host_or_alias.is_a? Symbol
-        raise ArgumentError, %Q|Unknown host alias "#{host_or_alias}"| unless HOST_ALIASES.has_key? host_or_alias
-        HOST_ALIASES[host_or_alias]
-      else
-        host_or_alias
-      end
-
-      # Parse the api key
-      if api_key_or_file.is_a? File
-        api_key = begin
-          api_key_or_file.read
-        rescue IOError
-          api_key_or_file.reopen(api_key_or_file, mode='r')
-          api_key_or_file.read
-        end
-        api_key_or_file.close
-      else
-        api_key = api_key_or_file
-      end
-
-      @client = Client.new(api_key, host + "/#{API_ROOT}")
+      @client = Client.new(host_or_alias, api_key_or_file)
     end
 
     # Returns, creating if necessary, a Group mapped to your foreign system's group

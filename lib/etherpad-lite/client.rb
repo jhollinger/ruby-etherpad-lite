@@ -11,6 +11,10 @@ module EtherpadLite
 
   # A thin wrapper around Etherpad Lite's HTTP JSON API
   class Client
+    # Aliases to common Etherpad Lite hosts
+    HOST_ALIASES = {:local => 'http://localhost:9001',
+                    :localhost => 'http://localhost:9001'}
+
     API_VERSION = 1
 
     CODE_OK = 0
@@ -30,10 +34,39 @@ module EtherpadLite
     end
 
     # Instantiate a new Etherpad Lite Client. The url should include the protocol (i.e. http or https).
-    def initialize(api_key, url='http://localhost:9001/api')
+    # 
+    # client1 = EtherpadLite::Client.new('https://etherpad.yoursite.com[https://etherpad.yoursite.com]', 'your api key')
+    # 
+    # client2 = EtherpadLite::Client.new(:local, File.new('/path/to/APIKEY.txt'))
+    # 
+    # client3 = EtherpadLite::Client.new(9001, File.new('/path/to/APIKEY.txt'))
+    def initialize(host_or_alias, api_key_or_file)
+      # Parse the host
+      url = if host_or_alias.is_a? Symbol
+        raise ArgumentError, %Q|Unknown host alias "#{host_or_alias}"| unless HOST_ALIASES.has_key? host_or_alias
+        HOST_ALIASES[host_or_alias]
+      elsif host_or_alias.is_a? Fixnum
+        "http://localhost:#{host_or_alias}"
+      else
+        host_or_alias
+      end
+      url << '/api' unless url =~ /\/api$/i
       @uri = URI.parse(url)
       raise ArgumentError, "#{url} is not a valid url" unless @uri.host and @uri.port
-      @api_key = api_key
+
+      # Parse the api key
+      if api_key_or_file.is_a? File
+        @api_key = begin
+          api_key_or_file.read
+        rescue IOError
+          api_key_or_file.reopen(api_key_or_file, mode='r')
+          api_key_or_file.read
+        end
+        api_key_or_file.close
+      else
+        @api_key = api_key_or_file
+      end
+
       connect!
     end
 

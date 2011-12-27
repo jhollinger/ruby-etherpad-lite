@@ -96,7 +96,7 @@ In the examples above, the low-level client is accessible from the high-level in
 
 or you can explicitly load just the low-level client:
     require 'etherpad-lite/client'
-    client = EtherpadLite::Client.new('api key', 'http://beta.etherpad.org/api')
+    client = EtherpadLite::Client.new('http://beta.etherpad.org/api', 'api key')
 
 The methods available to the low-level client should precisely match the HTTP API. In general, it behaves identically to the other
 clients, particularly PHP's and Python's.
