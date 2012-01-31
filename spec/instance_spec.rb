@@ -10,7 +10,7 @@ describe EtherpadLite::Instance do
       begin
         TEST_CONFIG[:api_key_file].read
       rescue IOError
-        TEST_CONFIG[:api_key_file].reopen(TEST_CONFIG[:api_key_file], mode='r')
+        TEST_CONFIG[:api_key_file].reopen(TEST_CONFIG[:api_key_file].path, mode='r')
         TEST_CONFIG[:api_key_file].read
       end
     else

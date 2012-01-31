@@ -1,13 +1,8 @@
 require 'rspec'
 
 # Load etherpad-lite
-require File.dirname(__FILE__) + '/../lib/etherpad-lite/client'
-require File.dirname(__FILE__) + '/../lib/etherpad-lite/models/padded'
-require File.dirname(__FILE__) + '/../lib/etherpad-lite/models/instance'
-require File.dirname(__FILE__) + '/../lib/etherpad-lite/models/pad'
-require File.dirname(__FILE__) + '/../lib/etherpad-lite/models/group'
-require File.dirname(__FILE__) + '/../lib/etherpad-lite/models/author'
-require File.dirname(__FILE__) + '/../lib/etherpad-lite/models/session'
+$LOAD_PATH.unshift File.dirname(__FILE__) + '/..'
+require 'etherpad-lite'
 
 RSpec.configure do |c|
   c.mock_with :rspec
