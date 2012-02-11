@@ -7,6 +7,8 @@ See {github.com/Pita/etherpad-lite}[https://github.com/Pita/etherpad-lite] for i
 == Installation
     gem install etherpad-lite
 
+*NOTE* Support for Ruby 1.8.x is deprecated and will be removed in future versions. Upgrade to Ruby 1.9.x and stop being an old fuddie-duddie. It's the IE6 of Ruby.
+
 == Basic usage
     require 'etherpad-lite'
 
