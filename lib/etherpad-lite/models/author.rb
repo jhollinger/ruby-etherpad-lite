@@ -1,7 +1,54 @@
 module EtherpadLite
   # An Author of Pad content
+  # 
+  # Authors are used to create a Session in a Group. Authors may be created with
+  # a name and a mapper. A mapper is usually an identifier stored in your third-party system,
+  # like a foreign key or username.
+  #
+  # Author Examples:
+  # 
+  #  @ether = EtherpadLite.connect(:local, 'api key')
+  # 
+  #  # Create a new author with both a name and a mapper
+  #  author1 = @ether.create_author(:name => 'Theodor Seuss Geisel', :mapper => 'author_1')
+  # 
+  #  # Load (and create, if necessary) a mapped author with a name
+  #  author2 = @ether.author('author_2', :name => 'Richard Bachman')
+  #
+  #  # Load (and create, if necessary) a author by mapper
+  #  author3 = @ether.mapper('author_3')
+  # 
+  #  # Load author1 by id
+  #  author4 = @ether.get_author(author1.id)
+  # 
+  # Session examples:
+  # 
+  #  # Create two hour-long session for author 1 in two different groups
+  #  group1 = @ether.group('my awesome group')
+  #  group2 = @ether.group('my other awesome group')
+  # 
+  #  session1 = author1.create_session(group1, 60)
+  #  session2 = author1.create_session(group2, 60)
+  # 
+  # Attribute examples:
+  # 
+  #  author1.name #> "Theodor Seuss Geisel"
+  # 
+  #  author1.mapper #> "author_1"
+  # 
+  #  author2.sessions #> [#<EtherpadLite::Session>, #<EtherpadLite::Session>]
+  # 
+  #  author2.session_ids.include? session1.id #> true
+  # 
   class Author
-    attr_reader :id, :instance, :name, :mapper
+    # The EtherpadLite::Instance object
+    attr_reader :instance
+    # The author's id
+    attr_reader :id
+    # The author's name (if any)
+    attr_reader :name
+    # The author's foreign mapper (if any)
+    attr_reader :mapper
 
     # Creates a new Author. Optionally, you may pass the :mapper option your third party system's author id.
     # This will allow you to find the Author again later using the same identifier as your foreign system.
@@ -9,9 +56,9 @@ module EtherpadLite
     # 
     # Options:
     # 
-    #  mapper => uid of Author from another system
+    # mapper => uid of Author from another system
     # 
-    #  name => Author's name
+    # name => Author's name
     def self.create(instance, options={})
       result = options[:mapper] \
         ? instance.client.createAuthorIfNotExistsFor(options[:mapper], options[:name]) \
@@ -23,9 +70,9 @@ module EtherpadLite
     # 
     # Options:
     # 
-    #  mapper => the foreign author id it's mapped to
+    # mapper => the foreign author id it's mapped to
     # 
-    #  name => the Author's name
+    # name => the Author's name
     def initialize(instance, id, options={})
       @instance = instance
       @id = id

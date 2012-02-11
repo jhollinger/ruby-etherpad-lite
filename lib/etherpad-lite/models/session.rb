@@ -1,7 +1,17 @@
 module EtherpadLite
-  # An Etherpad Lite Session between a Group and an Author
+  # An Etherpad Lite Session between a Group and an Author. See those classes for examples of how to create a session.
+  # 
+  # Sessions are useful for embedding an Etherpad Lite Pad into a external application. For public pads, sessions 
+  # are not necessary. However Group pads require a Session to access to the pad via the Web UI.
+  # 
+  # Generally, you will create the session server side, then pass its id to the embedded pad using a cookie. See the README
+  # for an example in a Rails app.
+  # 
   class Session
-    attr_reader :id, :instance
+    # The EtherpadLite::Instance object
+    attr_reader :instance
+    # The session id
+    attr_reader :id
 
     # Creates a new Session between a Group and an Author. The session will expire after length_in_min.
     def self.create(instance, group_id, author_id, length_in_min)

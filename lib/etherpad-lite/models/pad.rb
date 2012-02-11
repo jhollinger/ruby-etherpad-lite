@@ -1,15 +1,26 @@
 module EtherpadLite
   # An Etherpad Lite Pad
+  # 
+  # This class allows you to interact with pads stored in an Etherpad Lite server. The README 
+  # has some basic examples.
+  # 
+  # Note that some functions are restricted to Group pads.
+  # 
   class Pad
-    attr_reader :id, :instance, :rev
+    # The EtherpadLite::Instance object
+    attr_reader :instance
+    # The pad id
+    attr_reader :id
+    # An optional pad revision number
+    attr_reader :rev
 
     # Creates and returns a new Pad.
     # 
     # Options:
     # 
-    #  text => 'initial Pad text'
+    # text => 'initial Pad text'
     # 
-    #  groupID => group id of Group new Pad should belong to
+    # groupID => group id of Group new Pad should belong to
     def self.create(instance, id, options={})
       if options[:groupID]
         group = Group.new instance, options[:groupID]
@@ -18,7 +29,7 @@ module EtherpadLite
         group = nil
         instance.client.createPad(id, options[:text])
       end
-      new instance, id, :group => group
+      new instance, id, :groupID => options[:groupID], :group => group
     end
 
     # Remove the group id portion of a Group Pad's id
@@ -30,12 +41,18 @@ module EtherpadLite
     # 
     # Options:
     # 
-    #  group
+    # groupID => a group id
     # 
-    #  rev
+    # group => an EtherpadLite::Group object
+    # 
+    # rev => a pad revision number
     def initialize(instance, id, options={})
       @instance = instance
       @id = id.to_s
+      if options[:groupID]
+        @group_id = options[:groupID]
+        @id = "#{@group_id}$#{@id}" unless @id =~ Group::GROUP_ID_REGEX
+      end
       @group = options[:group]
       @rev = options[:rev]
     end
@@ -65,7 +82,7 @@ module EtherpadLite
     # 
     # Options:
     # 
-    #  rev => revision_number
+    # rev => revision_number
     def text(options={})
       options[:rev] ||= @rev unless @rev.nil?
       @instance.client.getText(@id, options[:rev])[:text]
@@ -80,7 +97,7 @@ module EtherpadLite
     # 
     # Options:
     # 
-    #  rev => revision_number
+    # rev => revision_number
     def html(options={})
       options[:rev] ||= @rev unless @rev.nil?
       @instance.client.getHTML(@id, options[:rev])[:html]

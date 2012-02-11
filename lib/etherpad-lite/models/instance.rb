@@ -1,16 +1,19 @@
 module EtherpadLite
   # Returns an EtherpadLite::Instance object.
   # 
-  # ether1 = EtherpadLite.connect('https://etherpad.yoursite.com[https://etherpad.yoursite.com]', 'your api key')
+  #  ether1 = EtherpadLite.connect('https://etherpad.yoursite.com[https://etherpad.yoursite.com]', 'your api key')
   # 
-  # ether2 = EtherpadLite.connect(:local, File.new('/path/to/APIKEY.txt'))
+  #  # An alias for http://localhost:9001
+  #  ether2 = EtherpadLite.connect(:local, File.new('/path/to/APIKEY.txt'))
   # 
-  # ether3 = EtherpadLite::Client.new(9001, File.new('/path/to/APIKEY.txt'))
+  #  # An alias for http://localhost:9001
+  #  ether3 = EtherpadLite.connect(9001, File.new('/path/to/APIKEY.txt'))
   def self.connect(host_or_alias, api_key_or_file)
     Instance.new(host_or_alias, api_key_or_file)
   end
 
-  # EtherpadLite::Instance provides a high-level interface to an Etherpad Lite system.
+  # EtherpadLite::Instance provides a high-level interface to the EtherpadLite::Client class. See the EtherpadLite module 
+  # for examples of how to establish a connection.
   class Instance
     include Padded
     # Stores the EtherpadLite::Client object used to power this Instance
@@ -18,11 +21,13 @@ module EtherpadLite
 
     # Instantiate a new Etherpad Lite Instance. The url should include the protocol (i.e. http or https).
     # 
-    # ether1 = EtherpadLite.connect('https://etherpad.yoursite.com[https://etherpad.yoursite.com]', 'your api key')
+    #  ether1 = EtherpadLite::Instance.new('https://etherpad.yoursite.com[https://etherpad.yoursite.com]', 'your api key')
     # 
-    # ether2 = EtherpadLite.connect(:local, File.new('/path/to/APIKEY.txt'))
+    #  # An alias for http://localhost:9001
+    #  ether2 = EtherpadLite::Instance.new(:local, File.new('/path/to/APIKEY.txt'))
     # 
-    # ether3 = EtherpadLite::Client.new(9001, File.new('/path/to/APIKEY.txt'))
+    #  # An alias for http://localhost:9001
+    #  ether3 = EtherpadLite::Instance.new(9001, File.new('/path/to/APIKEY.txt'))
     def initialize(host_or_alias, api_key_or_file)
       @client = Client.new(host_or_alias, api_key_or_file)
     end
@@ -42,7 +47,7 @@ module EtherpadLite
     # 
     # Options:
     # 
-    #  mapper => your foreign group id
+    # mapper => your foreign group id
     def create_group(options={})
       Group.create self, options
     end
@@ -51,7 +56,7 @@ module EtherpadLite
     # 
     # Options:
     # 
-    #  name => the Author's name
+    # name => the Author's name
     def author(mapper, options={})
       options[:mapper] = mapper
       create_author options
@@ -67,7 +72,7 @@ module EtherpadLite
     # 
     # Options:
     # 
-    #  mapper => your foreign author id
+    # mapper => your foreign author id
     # 
     #  name => the Author's name
     def create_author(options={})

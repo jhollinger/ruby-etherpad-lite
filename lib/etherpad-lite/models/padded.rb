@@ -23,7 +23,7 @@ module EtherpadLite
     # 
     # Options:
     # 
-    #  text => 'initial Pad text'
+    # text => 'initial Pad text'
     def create_pad(id, options={})
       Pad.create instance, id, options
     end

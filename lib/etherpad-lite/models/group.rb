@@ -1,10 +1,55 @@
 module EtherpadLite
-  # A Group of Pads
+  # A Group serves as a container for related pads. Only an Author with a Session can access a group Pad.
+  # 
+  # Group examples:
+  # 
+  #  # Create a new group
+  #  group1 = @ether.create_group
+  # 
+  #  # Create a new group with a mapper, so it can be easily found
+  #  group2 = @ether.create_group :mapper => 'Blurg'
+  # 
+  #  # Load (or create, if it doesn't exist) a group mapped to "Flarb"
+  #  group3 = @ether.group('Flarb')
+  # 
+  #  # Load an existing group mapped to "Roop"
+  #  group4 = @ether.get_group('Roop')
+  # 
+  # Group pad examples:
+  # 
+  #  # Create a new pad in this group, optionally specifying its initial text
+  #  pad1 = group1.create_pad('group 1 pad', :text => 'Words!')
+  # 
+  #  # Load (or create, if it doesn't exist) a pad in this group
+  #  pad2 = group2.pad('group 2 pad')
+  # 
+  #  # Load an existing pad from group 2
+  #  pad3 = group2.get_pad('important pad')
+  # 
+  # Session examples:
+  # 
+  #  # Create two hour-long session for an author in group 1
+  #  author = @ether.author('author_1')
+  #  session = group1.create_session(author, 60)
+  # 
+  # Attribute examples:
+  # 
+  #  pad2.group_id == group2.id #> true
+  # 
+  #  pad2.id == group2.id + '$' + pad2.name #> true
+  # 
+  #  pad2 == group2.pad('group 2 pad') == @ether.get_pad("#{group2.id}$group 2 pad") == @ether.get_pad('group 2 pad', :groupID => group2.id) #> true
+  # 
   class Group
     GROUP_ID_REGEX = /^g\.[^\$]+/
     include Padded
 
-    attr_reader :id, :instance, :mapper
+    # The EtherpadLite::Instance object
+    attr_reader :instance
+    # The group id
+    attr_reader :id
+    # An optional identifier used to map the group to something outside Etherpad Lite
+    attr_reader :mapper
 
     # Creates a new Group. Optionally, you may pass the :mapper option your third party system's group id.
     # This will allow you to find your Group again later using the same identifier as your foreign system.
@@ -12,7 +57,7 @@ module EtherpadLite
     # 
     # Options:
     # 
-    #  mapper => your foreign group id
+    # mapper => your foreign group id
     def self.create(instance, options={})
       result = options[:mapper] \
         ? instance.client.createGroupIfNotExistsFor(options[:mapper]) \
@@ -24,7 +69,7 @@ module EtherpadLite
     # 
     # Options:
     # 
-    #  mapper => the foreign id it's mapped to
+    # mapper => the foreign id it's mapped to
     def initialize(instance, id, options={})
       @instance = instance
       @id = id
@@ -49,7 +94,7 @@ module EtherpadLite
     # 
     # Options:
     # 
-    #  text => 'initial Pad text'
+    # text => 'initial Pad text'
     def create_pad(id, options={})
       options[:groupID] = @id
       super groupify_pad_id(id), options
@@ -91,7 +136,7 @@ module EtherpadLite
 
     # Prepend the group_id to the pad name
     def groupify_pad_id(pad_id)
-      "#{@id}$#{pad_id}"
+      pad_id =~ GROUP_ID_REGEX ? pad_id : "#{@id}$#{pad_id}"
     end
   end
 end

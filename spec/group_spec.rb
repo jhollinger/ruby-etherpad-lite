@@ -28,6 +28,12 @@ describe EtherpadLite::Group do
     pad.id.should == "#{group.id}$Important Group Stuff"
   end
 
+  it "should create another Group Pad" do
+    group = @eth.group 'Group A'
+    pad = @eth.create_pad 'Other Important Group Stuff', :groupID => group.id, :text => 'foo'
+    pad.text.should == "foo\n"
+  end
+
   it "should create a Group Pad with the right name" do
     group = @eth.group 'Group A'
     pad = group.pad 'Important Group Stuff'
@@ -39,9 +45,29 @@ describe EtherpadLite::Group do
     group.get_pad('Important Group Stuff').group_id.should == group.id
   end
 
-  it "should find a Group Pad with the right id" do
+  it "should find another Group Pad with the right group" do
     group = @eth.group 'Group A'
-    group.pad_ids.should == [:"#{group.id}$Important_Group_Stuff"]
+    @eth.get_pad('Other Important Group Stuff', :groupID => group.id).group_id.should == group.id
+  end
+
+  it "should find yet another Group Pad with the right group" do
+    group = @eth.group 'Group A'
+    @eth.get_pad("Other Important Group Stuff", :groupID => group.id).text.should == "foo\n"
+  end
+
+  it "should find another Group Pad with the right text" do
+    group = @eth.group 'Group A'
+    @eth.get_pad("#{group.id}$Other Important Group Stuff").text.should == "foo\n"
+  end
+
+  it "should find yet another Group Pad with the right text" do
+    group = @eth.group 'Group A'
+    @eth.get_pad("#{group.id}$Other Important Group Stuff").text.should == "foo\n"
+  end
+
+  it "should find a Group Pad with the right ids" do
+    group = @eth.group 'Group A'
+    group.pad_ids.should == [:"#{group.id}$Important_Group_Stuff", :"#{group.id}$Other_Important_Group_Stuff"]
   end
 
   it "should find a Group Pad with the right name" do

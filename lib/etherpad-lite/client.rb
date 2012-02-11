@@ -4,26 +4,44 @@ require 'net/https'
 require 'json'
 
 # Ruby 1.8.x may not work, and I don't care
-BAD_RUBY = RUBY_VERSION < '1.9.0'
+BAD_RUBY = RUBY_VERSION < '1.9.0' # :nodoc:
 
 module EtherpadLite
+  MAJOR_VERSION, MINOR_VERSION, TINY_VERSION, PRE_VERSION = 0, 0, 4, nil # :nodoc:
+  # The client version
+  VERSION = [MAJOR_VERSION, MINOR_VERSION, TINY_VERSION, PRE_VERSION].compact.join '.'
+
   # An error returned by the server
   class APIError < StandardError
     MESSAGE = "Error while talking to the API (%s). Make sure you are running the latest version of the Etherpad Lite server. If that is not possible, try rolling this client back to an earlier version."
   end
 
   # A thin wrapper around Etherpad Lite's HTTP JSON API
+  # 
+  #  client1 = EtherpadLite::Client.new('https://etherpad.yoursite.com[https://etherpad.yoursite.com]', 'your api key')
+  # 
+  #  # An alias for http://localhost:9001
+  #  client2 = EtherpadLite::Client.new(:local, File.new('/path/to/APIKEY.txt'))
+  # 
+  #  # An alias for http://localhost:9001
+  #  ether = EtherpadLite::Client.new(9001, File.new('/path/to/APIKEY.txt'))
   class Client
     # Aliases to common Etherpad Lite hosts
     HOST_ALIASES = {:local => 'http://localhost:9001',
                     :localhost => 'http://localhost:9001'}
 
+    # The Etherpad Lite HTTP API version this library version targets
     API_VERSION = 1
 
+    # HTTP API response code for okay
     CODE_OK = 0
+    # HTTP API response code for invalid method parameters
     CODE_INVALID_PARAMETERS = 1
+    # HTTP API response code for Etherpad Lite error
     CODE_INTERNAL_ERROR = 2
+    # HTTP API response code for invalid api method
     CODE_INVALID_METHOD = 3
+    # HTTP API response code for invalid api key
     CODE_INVALID_API_KEY = 4
 
     # A URI object containing the URL of the Etherpad Lite instance
@@ -38,11 +56,13 @@ module EtherpadLite
 
     # Instantiate a new Etherpad Lite Client. The url should include the protocol (i.e. http or https).
     # 
-    # client1 = EtherpadLite::Client.new('https://etherpad.yoursite.com[https://etherpad.yoursite.com]', 'your api key')
+    #  client1 = EtherpadLite::Client.new('https://etherpad.yoursite.com[https://etherpad.yoursite.com]', 'your api key')
     # 
-    # client2 = EtherpadLite::Client.new(:local, File.new('/path/to/APIKEY.txt'))
+    #  # An alias for http://localhost:9001
+    #  client2 = EtherpadLite::Client.new(:local, File.new('/path/to/APIKEY.txt'))
     # 
-    # client3 = EtherpadLite::Client.new(9001, File.new('/path/to/APIKEY.txt'))
+    #  # An alias for http://localhost:9001
+    #  client3 = EtherpadLite::Client.new(9001, File.new('/path/to/APIKEY.txt'))
     def initialize(host_or_alias, api_key_or_file)
       # Parse the host
       url = if host_or_alias.is_a? Symbol

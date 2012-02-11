@@ -1,9 +1,9 @@
 require 'uri'
 
-# Add Ruby 1.9's URI.encode_www_form to Ruby 1.8
-# thanks to http://apidock.com/ruby/Net/HTTPHeader/set_form_data#1105-Backport-from-1-9
 unless URI.respond_to? :encode_www_form
   module URI
+    # Add Ruby 1.9's URI.encode_www_form to Ruby 1.8
+    # thanks to http://apidock.com/ruby/Net/HTTPHeader/set_form_data#1105-Backport-from-1-9
     def self.encode_www_form(enum)
       enum.map do |k,v|
         if v.nil?

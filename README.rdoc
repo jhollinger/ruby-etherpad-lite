@@ -34,6 +34,10 @@ See {github.com/Pita/etherpad-lite}[https://github.com/Pita/etherpad-lite] for i
 
 Full docs are at {jordanhollinger.com/docs/ruby-etherpad-lite/}[http://jordanhollinger.com/docs/ruby-etherpad-lite/]
 
+== Advanced usage
+The above example deals with public pads, accessible to anyone through the Web UI. There is another class of pads - group pads - which deal with groups, authors and sessions.
+Examples are documented in EtherpadLite::Group, EtherpadLite::Author, and EtherpadLite::Session.
+
 == Example use in Rails
 For your view, I recommend the jQuery plugin at {github.com/johnyma22/etherpad-lite-jquery-plugin}[https://github.com/johnyma22/etherpad-lite-jquery-plugin].
 
@@ -86,8 +90,8 @@ Some example controller actions:
 Most of the EPL clients are extremely thin wrappers around the HTTP API. The Ruby client offers a slightly higher level of abstraction,
 with the goal of making it as simple, powerful, and dare I say fun, as possible. That said, there are times when a bare-bones client may be 
 preferable. In a hopefully not misguided attempt to please everyone, the Ruby client is written in two layers:
-- A high-level "models" interface (above)
-- A low-level client matching the HTTP API (below)
+- A high-level "models" interface starting with EtherpadLite::Instance (above)
+- A low-level client matching the HTTP API (EtherpadLite::Client, below)
 
 In the examples above, the low-level client is accessible from the high-level interface:
     client = ether.client
