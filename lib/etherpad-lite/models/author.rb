@@ -16,7 +16,7 @@ module EtherpadLite
   #  author2 = @ether.author('author_2', :name => 'Richard Bachman')
   #
   #  # Load (and create, if necessary) a author by mapper
-  #  author3 = @ether.mapper('author_3')
+  #  author3 = @ether.author('author_3')
   # 
   #  # Load author1 by id
   #  author4 = @ether.get_author(author1.id)

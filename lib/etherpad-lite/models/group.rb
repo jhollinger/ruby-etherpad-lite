@@ -40,6 +40,8 @@ module EtherpadLite
   # 
   #  pad2 == group2.pad('group 2 pad') == @ether.get_pad("#{group2.id}$group 2 pad") == @ether.get_pad('group 2 pad', :groupID => group2.id) #> true
   # 
+  #  group2.mapper #> "Blurg"
+  # 
   class Group
     GROUP_ID_REGEX = /^g\.[^\$]+/
     include Padded
