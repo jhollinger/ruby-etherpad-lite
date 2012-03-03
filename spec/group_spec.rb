@@ -67,7 +67,7 @@ describe EtherpadLite::Group do
 
   it "should find a Group Pad with the right ids" do
     group = @eth.group 'Group A'
-    group.pad_ids.should == [:"#{group.id}$Important_Group_Stuff", :"#{group.id}$Other_Important_Group_Stuff"]
+    group.pad_ids.should == ["#{group.id}$Important_Group_Stuff", "#{group.id}$Other_Important_Group_Stuff"]
   end
 
   it "should find a Group Pad with the right name" do

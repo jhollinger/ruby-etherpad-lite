@@ -109,7 +109,7 @@ module EtherpadLite
 
     # Returns an array of all the Pad ids in this Group.
     def pad_ids
-      @instance.client.listPads(@id)[:padIDs].keys
+      @instance.client.listPads(@id)[:padIDs]
     end
 
     # Create a new session for author that will last length_in_minutes.
