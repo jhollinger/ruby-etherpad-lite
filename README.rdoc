@@ -42,6 +42,7 @@ Examples are documented in EtherpadLite::Group, EtherpadLite::Author, and Etherp
 
 == Example use in Rails
 For your view, I recommend the jQuery plugin at {github.com/johnyma22/etherpad-lite-jquery-plugin}[https://github.com/johnyma22/etherpad-lite-jquery-plugin].
+Also, I recommend reading the docs for EtherpadLite::Group first.
 
 Add the following to your Gemfile
   gem 'etherpad-lite'

@@ -5,15 +5,17 @@ module EtherpadLite
   # 
   #  # Create a new group
   #  group1 = @ether.create_group
+  #  # Etherpad Lite will assign it an internal id
+  #  group.id #> 'g.asdflsadf7w9823kjlasdf' 
   # 
-  #  # Create a new group with a mapper, so it can be easily found
+  #  # Create a new group with a mapper, so it can be easily found again
   #  group2 = @ether.create_group :mapper => 'Blurg'
   # 
   #  # Load (or create, if it doesn't exist) a group mapped to "Flarb"
   #  group3 = @ether.group('Flarb')
   # 
-  #  # Load an existing group mapped to "Roop"
-  #  group4 = @ether.get_group('Roop')
+  #  # Load an existing group based on its internal id
+  #  group4 = @ether.get_group('g.823lasdlfj98asdfj')
   # 
   # Group pad examples:
   # 
@@ -32,7 +34,7 @@ module EtherpadLite
   #  author = @ether.author('author_1')
   #  session = group1.create_session(author, 60)
   # 
-  # Attribute examples:
+  # Understand how ids work. A group pad's id is the group_id + '$' + pad_name:
   # 
   #  pad2.group_id == group2.id #> true
   # 
