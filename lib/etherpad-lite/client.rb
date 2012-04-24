@@ -71,7 +71,7 @@ module EtherpadLite
       elsif host_or_alias.is_a? Fixnum
         "http://localhost:#{host_or_alias}"
       else
-        host_or_alias
+        host_or_alias.clone
       end
       url << '/api' unless url =~ /\/api$/i
       @uri = URI.parse(url)
