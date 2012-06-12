@@ -54,7 +54,7 @@ module EtherpadLite
       attr_accessor :ca_path
     end
 
-    # Instantiate a new Etherpad Lite Client. The url should include the protocol (i.e. http or https).
+    # Instantiate a new Etherpad Lite Client.
     # 
     #  client1 = EtherpadLite::Client.new('https://etherpad.yoursite.com[https://etherpad.yoursite.com]', 'your api key')
     # 
@@ -75,7 +75,7 @@ module EtherpadLite
       end
       url << '/api' unless url =~ /\/api$/i
       @uri = URI.parse(url)
-      raise ArgumentError, "#{url} is not a valid url" unless @uri.host and @uri.port
+      raise ArgumentError, "#{url} does not contain a valid host and port" unless @uri.host and @uri.port
 
       # Parse the api key
       if api_key_or_file.is_a? File
@@ -91,40 +91,6 @@ module EtherpadLite
       end
 
       connect!
-    end
-
-    # Alias to "call" using the GET HTTP method
-    def get(method, params={})
-      call method, params, :get
-    end
-
-    # Alias to "call" using the POST HTTP method
-    def post(method, params={})
-      call method, params, :post
-    end
-
-    # Calls the EtherpadLite API and returns the :data portion of the response Hash.
-    # 
-    # "method" should be a valid API method name, as a String or Symbol.
-    # 
-    # "params" should be any URL or form parameters as a Hash.
-    # 
-    # "http_method" should be :get or :post, defaults to :get.
-    # 
-    def call(method, params={}, http_method=:get)
-      params[:apikey] = @api_key
-      uri = [@uri.path, API_VERSION, method].compact.join('/')
-      http_method = :post if BAD_RUBY # XXX A horrible, horrible hack for Ruby 1.8
-      req = case http_method
-        when :get then Net::HTTP::Get.new(uri << '?' << URI.encode_www_form(params))
-        when :post
-          post = Net::HTTP::Post.new(uri)
-          post.set_form_data(params)
-          post
-        else raise ArgumentError, "#{http_method} is not a valid HTTP method"
-      end
-      response = @http.request(req)
-      handleResult response.body
     end
 
     # Groups
@@ -284,6 +250,40 @@ module EtherpadLite
     end
 
     protected
+
+    # Alias to "call" using the GET HTTP method
+    def get(method, params={})
+      call method, params, :get
+    end
+
+    # Alias to "call" using the POST HTTP method
+    def post(method, params={})
+      call method, params, :post
+    end
+
+    # Calls the EtherpadLite API and returns the :data portion of the response Hash.
+    # 
+    # "method" should be a valid API method name, as a String or Symbol.
+    # 
+    # "params" should be any URL or form parameters as a Hash.
+    # 
+    # "http_method" should be :get or :post, defaults to :get.
+    # 
+    def call(method, params={}, http_method=:get)
+      params[:apikey] = @api_key
+      uri = [@uri.path, API_VERSION, method].compact.join('/')
+      http_method = :post if BAD_RUBY # XXX A horrible, horrible hack for Ruby 1.8
+      req = case http_method
+        when :get then Net::HTTP::Get.new(uri << '?' << URI.encode_www_form(params))
+        when :post
+          post = Net::HTTP::Post.new(uri)
+          post.set_form_data(params)
+          post
+        else raise ArgumentError, "#{http_method} is not a valid HTTP method"
+      end
+      response = @http.request(req)
+      handleResult response.body
+    end
 
     # Parses the JSON response from the server, returning the data object as a Hash with symbolized keys.
     # If the API response contains an error code, an exception is raised.
