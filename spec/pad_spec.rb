@@ -56,8 +56,8 @@ describe EtherpadLite::Pad do
 
   it "should set HTML" do
     pad = @eth.get_pad 'another new pad'
-    pad.html = "<p>Here's some HTML</p>"
-    pad.html.should == "Here&#x27;s some HTML<br>"
+    pad.html = "<div><p>Here's some HTML.</p>\n<p>Please rewind it when you're finished.</p></div>"
+    pad.html.should == "Here&#x27;s some HTML.<br>Please rewind it when you&#x27;re finished.<br>"
   end
 
   it "should have the first revision" do
