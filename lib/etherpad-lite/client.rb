@@ -7,7 +7,7 @@ require 'json'
 BAD_RUBY = RUBY_VERSION < '1.9.0' # :nodoc:
 
 module EtherpadLite
-  MAJOR_VERSION, MINOR_VERSION, TINY_VERSION, PRE_VERSION = 0, 1, 0, 'rc1' # :nodoc:
+  MAJOR_VERSION, MINOR_VERSION, TINY_VERSION, PRE_VERSION = 0, 1, 0, 'rc2' # :nodoc:
   # The client version
   VERSION = [MAJOR_VERSION, MINOR_VERSION, TINY_VERSION, PRE_VERSION].compact.join '.'
 
