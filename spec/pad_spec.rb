@@ -88,6 +88,12 @@ describe EtherpadLite::Pad do
     pad.text.should == "Brand new text\n"
   end
 
+  it "should list author ids" do
+    pad = @eth.pad 'brand new pad2'
+    pad.author_ids.should == []
+    pad.authors.should == []
+  end
+
   it "should be deleted" do
     @eth.get_pad('another new pad').delete
     @eth.create_pad('another new pad').id.should_not == nil

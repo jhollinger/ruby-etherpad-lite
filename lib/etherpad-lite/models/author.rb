@@ -80,6 +80,16 @@ module EtherpadLite
       @name = options[:name]
     end
 
+    # Returns an array of pad ids that this author has edited
+    def pad_ids
+      @instance.client.listPadsOfAuthor(@id)[:padIDs] || []
+    end
+
+    # Returns an array of Pads that this author has edited
+    def pads
+      pad_ids.map { |id| Pad.new(@instance, id) }
+    end
+
     # Create a new session for group that will last length_in_minutes.
     def create_session(group, length_in_min)
       Session.create(@instance, group.id, @id, length_in_min)

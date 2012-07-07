@@ -21,4 +21,10 @@ describe EtherpadLite::Author do
     # They should be the same
     author1.id.should == author2.id
   end
+
+  it "should list pads of 'Author A'" do
+    author = @eth.create_author :mapper => 'Author A'
+    author.pad_ids.should == []
+    author.pads.should == []
+  end
 end

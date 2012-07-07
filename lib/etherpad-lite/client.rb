@@ -140,6 +140,10 @@ module EtherpadLite
       post :createAuthorIfNotExistsFor, params
     end
 
+    def listPadsOfAuthor(authorID)
+      get :listPadsOfAuthor, :authorID => authorID
+    end
+
     # Sessions
     # Sessions can be created between a group and an author. This allows
     # an author to access more than one group. The sessionID will be set as
@@ -222,6 +226,10 @@ module EtherpadLite
     # Returns the Pad's read-only id
     def getReadOnlyID(padID)
       get :getReadOnlyID, :padID => padID
+    end
+
+    def listAuthorsOfPad(padID)
+      get :listAuthorsOfPad, :padID => padID
     end
 
     # Sets a boolean for the public status of a Pad

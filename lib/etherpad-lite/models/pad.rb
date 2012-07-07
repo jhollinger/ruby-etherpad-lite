@@ -124,6 +124,16 @@ module EtherpadLite
       @read_only_id ||= @instance.client.getReadOnlyID(@id)[:readOnlyID]
     end
 
+    # Returns an array of ids of authors who've edited this pad
+    def author_ids
+      @instance.client.listAuthorsOfPad(@id)[:authorIDs] || []
+    end
+
+    # Returns an array of Authors who've edited this pad
+    def authors
+      author_ids.map { |id| Author.new(@instance, id) }
+    end
+
     # Returns true if this is a public Pad (opposite of private?).
     # This only applies to Pads belonging to a Group.
     def public?
