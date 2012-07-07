@@ -7,10 +7,6 @@ require 'json'
 BAD_RUBY = RUBY_VERSION < '1.9.0' # :nodoc:
 
 module EtherpadLite
-  MAJOR_VERSION, MINOR_VERSION, TINY_VERSION, PRE_VERSION = 0, 1, 0, 'rc2' # :nodoc:
-  # The client version
-  VERSION = [MAJOR_VERSION, MINOR_VERSION, TINY_VERSION, PRE_VERSION].compact.join '.'
-
   # An error returned by the server
   class APIError < StandardError
     MESSAGE = "Error while talking to the API (%s). Make sure you are running the latest version of the Etherpad Lite server. If that is not possible, try rolling this client back to an earlier version."

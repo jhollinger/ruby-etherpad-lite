@@ -1,4 +1,4 @@
-require File.join(File.dirname(__FILE__), 'lib', 'etherpad-lite', 'client')
+require File.join(File.dirname(__FILE__), 'lib', 'etherpad-lite', 'version')
 
 Gem::Specification.new do |spec|
   spec.name = 'etherpad-lite'
@@ -6,7 +6,7 @@ Gem::Specification.new do |spec|
   spec.summary = "A Ruby client library for Etherpad Lite"
   spec.description = "etherpad-lite is a Ruby interface to Etherpad Lite's HTTP JSON API"
   spec.authors = ['Jordan Hollinger']
-  spec.date = '2012-06-20'
+  spec.date = '2012-07-07'
   spec.email = 'jordan@jordanhollinger.com'
   spec.homepage = 'http://github.com/jhollinger/ruby-etherpad-lite'
 
