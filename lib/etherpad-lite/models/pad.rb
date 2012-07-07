@@ -124,6 +124,11 @@ module EtherpadLite
       @read_only_id ||= @instance.client.getReadOnlyID(@id)[:readOnlyID]
     end
 
+    # Returns the time the pad was last edited as a Unix timestamp
+    def last_edited
+      @instance.client.getLastEdited(@id)[:lastEdited]
+    end
+
     # Returns an array of ids of authors who've edited this pad
     def author_ids
       @instance.client.listAuthorsOfPad(@id)[:authorIDs] || []

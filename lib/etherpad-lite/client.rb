@@ -218,6 +218,11 @@ module EtherpadLite
       get :getRevisionsCount, :padID => padID
     end
 
+    # Returns the time the pad was last edited as a Unix timestamp
+    def getLastEdited(padID)
+      get :getLastEdited, :padID => padID
+    end
+
     # Delete the given Pad
     def deletePad(padID)
       post :deletePad, :padID => padID

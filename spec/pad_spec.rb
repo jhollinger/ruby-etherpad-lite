@@ -94,6 +94,11 @@ describe EtherpadLite::Pad do
     pad.authors.should == []
   end
 
+  it "should get the last edit date" do
+    pad = @eth.pad 'brand new pad3'
+    pad.last_edited.>(1).should == true
+  end
+
   it "should be deleted" do
     @eth.get_pad('another new pad').delete
     @eth.create_pad('another new pad').id.should_not == nil
