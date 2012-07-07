@@ -99,6 +99,11 @@ describe EtherpadLite::Pad do
     pad.last_edited.>(1).should == true
   end
 
+  it "should return the number of users" do
+    pad = @eth.pad 'brand new pad3'
+    pad.user_count.should == 0
+  end
+
   it "should be deleted" do
     @eth.get_pad('another new pad').delete
     @eth.create_pad('another new pad').id.should_not == nil

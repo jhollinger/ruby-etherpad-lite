@@ -119,6 +119,12 @@ module EtherpadLite
       revision_numbers.map { |n| Pad.new(@instance, @id, :rev => n) }
     end
 
+    # Returns the number of users currently editing a pad
+    def user_count
+      @instance.client.padUsersCount(@id)[:padUsersCount]
+    end
+    alias_method :users_count, :user_count
+
     # Returns the Pad's read-only id. This is cached.
     def read_only_id
       @read_only_id ||= @instance.client.getReadOnlyID(@id)[:readOnlyID]

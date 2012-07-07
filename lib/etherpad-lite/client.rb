@@ -218,6 +218,11 @@ module EtherpadLite
       get :getRevisionsCount, :padID => padID
     end
 
+    # Returns the number of users currently editing the pad
+    def padUsersCount(padID)
+      get :padUsersCount, :padID => padID
+    end
+
     # Returns the time the pad was last edited as a Unix timestamp
     def getLastEdited(padID)
       get :getLastEdited, :padID => padID
