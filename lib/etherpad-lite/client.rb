@@ -3,9 +3,6 @@ require 'net/http'
 require 'net/https'
 require 'json'
 
-# Ruby 1.8.x may not work, and I don't care
-BAD_RUBY = RUBY_VERSION < '1.9.0' # :nodoc:
-
 module EtherpadLite
   # An error returned by the server
   class APIError < StandardError
@@ -286,7 +283,6 @@ module EtherpadLite
     def call(method, params={}, http_method=:get)
       params[:apikey] = @api_key
       uri = [@uri.path, API_VERSION, method].compact.join('/')
-      http_method = :post if BAD_RUBY # XXX A horrible, horrible hack for Ruby 1.8
       req = case http_method
         when :get then Net::HTTP::Get.new(uri << '?' << URI.encode_www_form(params))
         when :post
@@ -339,6 +335,3 @@ end
   EtherpadLite::Client.ca_path = path and break if File.exists? path
 end
 $stderr.puts %q|WARNING Ruby etherpad-lite client was unable to find your CA Certificates; HTTPS connections will *not* be verified! You may remedy this with "EtherpadLite::Client.ca_path = '/path/to/certs'"| unless EtherpadLite::Client.ca_path
-
-# Warn about old Ruby versions
-$stderr.puts "WARNING You are using an ancient version of Ruby which may not be supported. Upgrade Ruby!" if BAD_RUBY
