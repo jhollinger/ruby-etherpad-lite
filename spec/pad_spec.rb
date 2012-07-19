@@ -104,6 +104,16 @@ describe EtherpadLite::Pad do
     pad.user_count.should == 0
   end
 
+  it "should not crash when setting null text" do
+    err_msg = nil
+    begin
+      @eth.client.send(:get, 'setText', :padID => 'brand new pad3')
+    rescue ArgumentError => e
+      err_msg = e.message
+    end
+    err_msg.should == 'text is no string'
+  end
+
   it "should be deleted" do
     @eth.get_pad('another new pad').delete
     @eth.create_pad('another new pad').id.should_not == nil
