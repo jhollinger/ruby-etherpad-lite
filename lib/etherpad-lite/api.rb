@@ -14,7 +14,7 @@ module EtherpadLite
     def initialize(version, client)
       @version = version.to_s
       @client = client
-      raise EtherpadLiteException, "API version #{@version} is not supported" unless VERSIONS.include? @version
+      raise Error, "API version #{@version} is not supported" unless VERSIONS.include? @version
     end
 
     # Groups

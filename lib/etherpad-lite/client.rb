@@ -1,3 +1,11 @@
+require 'uri'
+require 'json'
+require 'delegate'
+
+require 'rest_client'
+
+require 'etherpad-lite/api'
+
 # Provides two interfaces to an EtherpadLite server's API; one low-level and one high.
 # 
 # Low level:
@@ -15,6 +23,9 @@
 #  => 'Pad text'
 #  pad.text = 'new pad text'
 module EtherpadLite
+  # An error returned by the server
+  Error = Class.new(StandardError)
+
   # Returns a new EtherpadLite::Client.
   # 
   #  client = EtherpadLite.client('https://etherpad.yoursite.com[https://etherpad.yoursite.com]', 'your api key')
@@ -74,8 +85,8 @@ module EtherpadLite
       response = JSON.parse(response, :symbolize_names => true)
       case response[:code]
         when CODE_OK then response[:data]
-        when CODE_INVALID_PARAMETERS, CODE_INVALID_API_KEY, CODE_INVALID_METHOD then raise EtherpadLiteException, response[:message]
-        else raise EtherpadLiteException, "An unknown error ocurrced while handling the API response: #{response.to_s}"
+        when CODE_INVALID_PARAMETERS, CODE_INVALID_API_KEY, CODE_INVALID_METHOD then raise Error, response[:message]
+        else raise Error, "An unknown error ocurrced while handling the API response: #{response.to_s}"
       end
     end
   end

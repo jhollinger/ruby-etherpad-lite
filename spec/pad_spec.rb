@@ -9,7 +9,7 @@ describe EtherpadLite::Pad do
     pad = @eth.get_pad 'a non-existant pad'
     begin
       txt = pad.text
-    rescue EtherpadLiteException => e
+    rescue EtherpadLite::Error => e
     end
     e.message.should == 'padID does not exist'
   end
@@ -22,7 +22,7 @@ describe EtherpadLite::Pad do
   it "should blow up when creating a Pad that already exists" do
     begin
       pad = @eth.create_pad 'my new pad', :text => 'The initial text'
-    rescue EtherpadLiteException => e
+    rescue EtherpadLite::Error => e
     end
     e.message.should == 'padID does already exist'
   end
@@ -108,7 +108,7 @@ describe EtherpadLite::Pad do
     err_msg = nil
     begin
       @eth.client.send(:get, 'setText', :padID => 'brand new pad3')
-    rescue EtherpadLiteException => e
+    rescue EtherpadLite::Error => e
       err_msg = e.message
     end
     err_msg.should == 'text is no string'
