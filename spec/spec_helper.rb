@@ -11,4 +11,4 @@ end
 # Load test config
 require 'yaml'
 TEST_CONFIG = YAML.load_file(File.dirname(__FILE__) + '/config.yml')
-TEST_CONFIG[:api_key_file] = File.new(TEST_CONFIG[:api_key_file]) unless TEST_CONFIG[:api_key_file].nil?
+TEST_CONFIG[:api_key_file] = File.open(TEST_CONFIG[:api_key_file], &:read) unless TEST_CONFIG[:api_key_file].nil?

@@ -8,7 +8,7 @@ module EtherpadLite
       begin
         Pad.create(instance, id, options)
       # Pad alreaded exists
-      rescue ArgumentError
+      rescue EtherpadLiteException
         Pad.new(instance, id, options)
       end
     end

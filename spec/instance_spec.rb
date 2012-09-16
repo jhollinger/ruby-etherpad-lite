@@ -6,16 +6,7 @@ describe EtherpadLite::Instance do
   end
 
   it "should have the right API key" do
-    api_key = if TEST_CONFIG[:api_key_file]
-      begin
-        TEST_CONFIG[:api_key_file].read
-      rescue IOError
-        TEST_CONFIG[:api_key_file].reopen(TEST_CONFIG[:api_key_file].path, mode='r')
-        TEST_CONFIG[:api_key_file].read
-      end
-    else
-      TEST_CONFIG[:api_key]
-    end
+    api_key = TEST_CONFIG[:api_key_file] || TEST_CONFIG[:api_key]
     @eth.client.api_key.should == api_key
   end
 

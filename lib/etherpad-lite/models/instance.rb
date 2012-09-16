@@ -1,35 +1,23 @@
 module EtherpadLite
   # Returns an EtherpadLite::Instance object.
   # 
-  #  ether1 = EtherpadLite.connect('https://etherpad.yoursite.com[https://etherpad.yoursite.com]', 'your api key')
+  #  ether = EtherpadLite.client('https://etherpad.yoursite.com[https://etherpad.yoursite.com]', 'your api key')
   # 
-  #  # An alias for http://localhost:9001
-  #  ether2 = EtherpadLite.connect(:local, File.new('/path/to/APIKEY.txt'))
-  # 
-  #  # An alias for http://localhost:9001
-  #  ether3 = EtherpadLite.connect(9001, File.new('/path/to/APIKEY.txt'))
-  def self.connect(host_or_alias, api_key_or_file)
-    Instance.new(host_or_alias, api_key_or_file)
+  #  ether = EtherpadLite.client(9001, 'your api key') # Alias to http://localhost:9001
+  def self.connect(url_or_port, api_key_or_file, api_version=nil)
+    Instance.new(url_or_port, api_key_or_file, api_version)
   end
 
-  # EtherpadLite::Instance provides a high-level interface to the EtherpadLite::Client class. See the EtherpadLite module 
-  # for examples of how to establish a connection.
+  # A high-level interface to EtherpadLite::Client.
   class Instance
     include Padded
     # Stores the EtherpadLite::Client object used to power this Instance
     attr_reader :client
 
-    # Instantiate a new Etherpad Lite Instance. The url should include the protocol (i.e. http or https).
-    # 
-    #  ether1 = EtherpadLite::Instance.new('https://etherpad.yoursite.com[https://etherpad.yoursite.com]', 'your api key')
-    # 
-    #  # An alias for http://localhost:9001
-    #  ether2 = EtherpadLite::Instance.new(:local, File.new('/path/to/APIKEY.txt'))
-    # 
-    #  # An alias for http://localhost:9001
-    #  ether3 = EtherpadLite::Instance.new(9001, File.new('/path/to/APIKEY.txt'))
-    def initialize(host_or_alias, api_key_or_file)
-      @client = Client.new(host_or_alias, api_key_or_file)
+    # Instantiate a new Etherpad Lite Instance. You may pass a full url or just a port number. The api key may be a string
+    # or a File object. If you do not specify an API version, it will default to the latest version that is supported.
+    def initialize(url_or_port, api_key_or_file, api_version=nil)
+      @client = Client.new(url_or_port, api_key_or_file, api_version)
     end
 
     # Returns, creating if necessary, a Group mapped to your foreign system's group
