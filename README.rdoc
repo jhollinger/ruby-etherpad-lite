@@ -89,24 +89,18 @@ Some example controller actions:
     end
   end
 
-== Why is the Ruby client so different from the others? What gives you the right?!?
-Most of the EPL clients are extremely thin wrappers around the HTTP API. The Ruby client offers a slightly higher level of abstraction,
-with the goal of making it as simple, powerful, and dare I say fun, as possible. That said, there are times when a bare-bones client may be 
-preferable. In a hopefully not misguided attempt to please everyone, the Ruby client is written in two layers:
-- A high-level "models" interface starting with EtherpadLite::Instance (above)
-- A low-level client matching the HTTP API (EtherpadLite::Client, below)
+== Low-level client
 
-In the examples above, the low-level client is accessible from the high-level interface:
+There is an optional low-level client, which is a paper-thin wrapper around Etherpad Lite's HTTP JSON API. In the examples above, the low-level client is accessible from the high-level interface:
     client = ether.client
     client.getText('my first etherpad lite pad')
     => {:text => "What hath God wrought?"}
 
 or you can explicitly load just the low-level client:
     require 'etherpad-lite/client'
-    client = EtherpadLite::Client.new('http://beta.etherpad.org/api', 'api key')
+    client = EtherpadLite.client('http://beta.etherpad.org/api', 'api key')
 
-The methods available to the low-level client should precisely match the HTTP API. In general, it behaves identically to the other
-clients, particularly PHP's and Python's.
+The methods available to the low-level client precisely match the HTTP API. In general, it behaves identically to the other clients, particularly PHP's and Python's.
 
 == Testing
 Testing this library is fairly simple. It requires:

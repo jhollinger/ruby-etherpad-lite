@@ -3,7 +3,8 @@
 # Low level:
 # 
 #  client = EtherpadLite.client('http://localhost:9001', 'api key')
-#  puts client.getText('padID')
+#  client.getText('padID')
+#  => {:text => "Pad text"}
 #  client.setText('padID', 'new pad text')
 # 
 # High level:
@@ -11,6 +12,7 @@
 #  ether = EtherpadLite.connect('http://localhost:9001', 'api key')
 #  pad = ether.pad('padID')
 #  puts pad.text
+#  => 'Pad text'
 #  pad.text = 'new pad text'
 module EtherpadLite
   # Returns a new EtherpadLite::Client.
