@@ -9,8 +9,4 @@ describe EtherpadLite::Instance do
     api_key = TEST_CONFIG[:api_key_file] || TEST_CONFIG[:api_key]
     @eth.client.api_key.should == api_key
   end
-
-  it "shouldn't be secure" do
-    @eth.client.secure?.should == false
-  end
 end

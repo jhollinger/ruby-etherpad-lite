@@ -1,9 +1,6 @@
 require 'uri'
 require 'json'
-require 'delegate'
-
 require 'rest_client'
-
 require 'etherpad-lite/api'
 
 # Provides two interfaces to an EtherpadLite server's API; one low-level and one high.
@@ -36,7 +33,9 @@ module EtherpadLite
   end
 
   # A thin wrapper around Etherpad Lite's HTTP JSON API.
-  class Client < SimpleDelegator
+  class Client
+    include API
+
     # HTTP API response codes
     CODE_OK, CODE_INVALID_PARAMETERS, CODE_INTERNAL_ERROR, CODE_INVALID_METHOD, CODE_INVALID_API_KEY = 0, 1, 2, 3, 4 # :nodoc:
 
@@ -44,19 +43,17 @@ module EtherpadLite
     attr_reader :uri
     # The API key
     attr_reader :api_key
+    # The API version string
+    attr_reader :api_version
 
     # Instantiate a new Etherpad Lite Client. You may pass a full url or just a port number. The api key may be a string
     # or a File object. If you do not specify an API version, it will default to the latest version that is supported.
     def initialize(url_or_port, api_key_or_file, api_version=nil)
-      url_or_port = "http://localhost:#{url_or_port}" if url_or_port.is_a? Fixnum
-      @uri = URI.parse("#{url_or_port}/api")
+      url_or_port = "http://localhost:#{url_or_port}" if url_or_port.is_a? Integer
+      @uri = URI.parse(url_or_port)
       @api_key = api_key_or_file.is_a?(IO) ? api_key_or_file.read : api_key_or_file
-      __setobj__ API.new(api_version || API::VERSIONS.last, self)
-    end
-
-    # Returns true if the connection to the Etherpad Lite instance is secured over HTTPS.
-    def secure?
-      @uri.port == 443
+      @api_version = api_version ? api_version.to_s : VERSIONS.last
+      verify_api_version!
     end
 
     # Call an API method using HTTP GET
@@ -74,7 +71,7 @@ module EtherpadLite
     # Calls the EtherpadLite API and returns the :data portion of the response Hash.
     def call(api_method, params={}, &request)
       params[:apikey] = @api_key
-      url = [@uri.to_s, self.version, api_method].compact.join('/')
+      url = [@uri.to_s, 'api', self.api_version, api_method].compact.join('/')
       response = request.(url, params).to_s
       handle response
     end
