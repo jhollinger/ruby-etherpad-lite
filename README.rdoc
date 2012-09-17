@@ -55,14 +55,14 @@ Some example controller actions:
   class EtherpadController < ApplicationController
     # /etherpad
     def index
-      # The idea is that your users are probably members of some kind of groups.
+      # Your users are probably members of some kind of groups.
       # These groups can be mapped to EtherpadLite Groups. List all the user's groups.
       @app_groups = current_user.groups
     end
 
     # /etherpad/groups/:id
     def group
-      ether = EtherpadLite.connect(:local, File.new('/var/www/etherpad-lite/APIKEY.txt'))
+      ether = EtherpadLite.connect(9001, File.new('/srv/www/etherpad-lite/APIKEY.txt'))
       @app_group = YourAppGroup.find(params[:id])
       # Map your app's group to an EtherpadLite Group, and list all its pads
       group = ether.group("my_app_group_#{@app_group.id}")
@@ -71,7 +71,7 @@ Some example controller actions:
 
     # /etherpad/pads/:ep_group_id/:ep_pad_name
     def pad
-      ether = EtherpadLite.connect(:local, File.new('/var/www/etherpad-lite/APIKEY.txt'))
+      ether = EtherpadLite.connect(9001, File.new('/srv/www/etherpad-lite/APIKEY.txt'))
       # Get the EtherpadLite Group and Pad by id
       @group = ether.get_group(params[:ep_group_id])
       @pad = @group.pad(params[:ep_pad_name])

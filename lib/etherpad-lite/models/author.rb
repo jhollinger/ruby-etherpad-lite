@@ -7,7 +7,7 @@ module EtherpadLite
   #
   # Author Examples:
   # 
-  #  @ether = EtherpadLite.connect(:local, 'api key')
+  #  @ether = EtherpadLite.connect(9001, 'api key')
   # 
   #  # Create a new author with both a name and a mapper
   #  author1 = @ether.create_author(:name => 'Theodor Seuss Geisel', :mapper => 'author_1')
