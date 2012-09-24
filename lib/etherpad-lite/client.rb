@@ -51,7 +51,7 @@ module EtherpadLite
 
     # Call an API method
     def method_missing(method, params={})
-      request = /^((set)|(create)|(delete))/ \
+      request = method =~ /^((set)|(create)|(delete))/ \
         ? ->(url, params) { RestClient.post(url, params) } \
         : ->(url, params) { RestClient.get(url, :params => params) }
       call(method, params, &request)
