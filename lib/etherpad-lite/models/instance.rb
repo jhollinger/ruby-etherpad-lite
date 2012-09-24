@@ -1,10 +1,10 @@
 module EtherpadLite
   # Returns an EtherpadLite::Instance object.
   # 
-  #  ether = EtherpadLite.client('https://etherpad.yoursite.com[https://etherpad.yoursite.com]', 'your api key')
+  #  ether = EtherpadLite.client('https://etherpad.yoursite.com', 'your api key', '1.1')
   # 
-  #  ether = EtherpadLite.client(9001, 'your api key') # Alias to http://localhost:9001
-  def self.connect(url_or_port, api_key_or_file, api_version=nil)
+  #  ether = EtherpadLite.client(9001, 'your api key', '1.1') # Alias to http://localhost:9001
+  def self.connect(url_or_port, api_key_or_file, api_version)
     Instance.new(url_or_port, api_key_or_file, api_version)
   end
 
@@ -15,8 +15,8 @@ module EtherpadLite
     attr_reader :client
 
     # Instantiate a new Etherpad Lite Instance. You may pass a full url or just a port number. The api key may be a string
-    # or a File object. If you do not specify an API version, it will default to the latest version that is supported.
-    def initialize(url_or_port, api_key_or_file, api_version=nil)
+    # or a File object.
+    def initialize(url_or_port, api_key_or_file, api_version)
       @client = Client.new(url_or_port, api_key_or_file, api_version)
     end
 

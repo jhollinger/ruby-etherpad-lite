@@ -7,13 +7,13 @@ See {github.com/Pita/etherpad-lite}[https://github.com/Pita/etherpad-lite] for i
 == Installation
     gem install etherpad-lite
 
-*NOTE* Support for Ruby 1.8.x has been dropped. Upgrade to Ruby 1.9.x.
+*NOTE* Nobody likes you, Ruby 1.8. Now go away.
 
 == Basic usage
     require 'etherpad-lite'
 
     # Connect to your Etherpad Lite instance
-    ether = EtherpadLite.connect('http://etherpad-lite.example.com', 'the api key')
+    ether = EtherpadLite.connect('http://etherpad-lite.example.com', 'the api key', 1.1)
 
     # Get a Pad (or create one if it doesn't exist)
     pad = ether.pad('my first etherpad lite pad')
@@ -93,14 +93,16 @@ Some example controller actions:
 
 There is an optional low-level client, which is a paper-thin wrapper around Etherpad Lite's HTTP JSON API. In the examples above, the low-level client is accessible from the high-level interface:
     client = ether.client
-    client.getText('my first etherpad lite pad')
+    client.getText(padID: 'my first etherpad lite pad')
     => {:text => "What hath God wrought?"}
 
 or you can explicitly load just the low-level client:
     require 'etherpad-lite/client'
-    client = EtherpadLite.client('http://beta.etherpad.org/api', 'api key')
+    client = EtherpadLite.client('http://beta.etherpad.org/api', 'api key', 1.1)
+    client.setText(padID: 'my first etherpad lite pad', text: "lots of new text and stuff")
+    => {:text => "lots of new text and stuff"}
 
-The methods available to the low-level client precisely match the HTTP API. In general, it behaves identically to the other clients, particularly PHP's and Python's.
+For a full list of methods and parameters, see {github.com/Pita/etherpad-lite/wiki/HTTP-API}[https://github.com/Pita/etherpad-lite/wiki/HTTP-API].
 
 == Testing
 Testing this library is fairly simple. It requires:

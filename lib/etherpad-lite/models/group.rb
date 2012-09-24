@@ -64,7 +64,7 @@ module EtherpadLite
     # mapper => your foreign group id
     def self.create(instance, options={})
       result = options[:mapper] \
-        ? instance.client.createGroupIfNotExistsFor(options[:mapper]) \
+        ? instance.client.createGroupIfNotExistsFor(groupMapper: options[:mapper]) \
         : instance.client.createGroup
       new instance, result[:groupID], options
     end
@@ -111,7 +111,7 @@ module EtherpadLite
 
     # Returns an array of all the Pad ids in this Group.
     def pad_ids
-      @instance.client.listPads(@id)[:padIDs]
+      @instance.client.listPads(groupID: @id)[:padIDs]
     end
 
     # Create a new session for author that will last length_in_minutes.
@@ -121,19 +121,19 @@ module EtherpadLite
 
     # Returns all session ids in this Group
     def session_ids
-      s = @instance.client.listSessionsOfGroup(@id) || {}
+      s = @instance.client.listSessionsOfGroup(groupID: @id) || {}
       s.keys
     end
 
     # Returns all sessions in this Group
     def sessions
-      s = @instance.client.listSessionsOfGroup(@id) || {}
+      s = @instance.client.listSessionsOfGroup(groupID: @id) || {}
       s.map { |id,info| Session.new(@instance, id, info) }
     end
 
     # Deletes the Group
     def delete
-      @instance.client.deleteGroup(@id)
+      @instance.client.deleteGroup(groupID: @id)
     end
 
     private

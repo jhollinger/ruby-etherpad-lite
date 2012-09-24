@@ -2,7 +2,7 @@ require File.dirname(__FILE__) + '/spec_helper'
 
 describe EtherpadLite::Pad do
   before do
-    @eth = EtherpadLite.connect TEST_CONFIG[:url], TEST_CONFIG[:api_key_file] || TEST_CONFIG[:api_key]
+    @eth = EtherpadLite.connect TEST_CONFIG[:url], TEST_CONFIG[:api_key_file] || TEST_CONFIG[:api_key], TEST_CONFIG[:api_version]
   end
 
   it "should blow up when querying a non-existing pad" do
@@ -107,7 +107,7 @@ describe EtherpadLite::Pad do
   it "should not crash when setting null text" do
     err_msg = nil
     begin
-      @eth.client.send(:get, 'setText', :padID => 'brand new pad3')
+      @eth.client.setText(:padID => 'brand new pad3')
     rescue EtherpadLite::Error => e
       err_msg = e.message
     end

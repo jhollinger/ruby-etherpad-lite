@@ -24,12 +24,12 @@ module EtherpadLite
     def self.create(instance, id, options={})
       if options[:groupID]
         group = Group.new instance, options[:groupID]
-        instance.client.createGroupPad(group.id, degroupify_pad_id(id), options[:text])
+        instance.client.createGroupPad(groupID: group.id, padName: degroupify_pad_id(id), text: options[:text])
       else
         group = nil
-        instance.client.createPad(id, options[:text])
+        instance.client.createPad(padID: id, text: options[:text])
       end
-      new instance, id, :groupID => options[:groupID], :group => group
+      new instance, id, groupID: options[:groupID], group: group
     end
 
     # Remove the group id portion of a Group Pad's id
@@ -84,13 +84,14 @@ module EtherpadLite
     # 
     # rev => revision_number
     def text(options={})
+      options[:padID] = @id
       options[:rev] ||= @rev unless @rev.nil?
-      @instance.client.getText(@id, options[:rev])[:text]
+      @instance.client.getText(options)[:text]
     end
 
     # Writes txt to the Pad. There is no 'save' method; it is written immediately.
     def text=(txt)
-      @instance.client.setText(@id, txt)
+      @instance.client.setText(padID: @id, text: txt)
     end
 
     # Returns the Pad's text as HTML. Unless you specified a :rev when instantiating the Pad, or specify one here, this will return the latest revision.
@@ -99,18 +100,19 @@ module EtherpadLite
     # 
     # rev => revision_number
     def html(options={})
+      options[:padID] = @id
       options[:rev] ||= @rev unless @rev.nil?
-      @instance.client.getHTML(@id, options[:rev])[:html]
+      @instance.client.getHTML(options)[:html]
     end
 
     # Writes HTML to the Pad. There is no 'save' method; it is written immediately.
     def html=(html)
-      @instance.client.setHTML(@id, html)
+      @instance.client.setHTML(padID: @id, html: html)
     end
 
     # Returns an Array of all this Pad's revision numbers
     def revision_numbers
-      max = @instance.client.getRevisionsCount(@id)[:revisions]
+      max = @instance.client.getRevisionsCount(padID: @id)[:revisions]
       (0..max).to_a
     end
 
@@ -121,23 +123,23 @@ module EtherpadLite
 
     # Returns the number of users currently editing a pad
     def user_count
-      @instance.client.padUsersCount(@id)[:padUsersCount]
+      @instance.client.padUsersCount(padID: @id)[:padUsersCount]
     end
     alias_method :users_count, :user_count
 
     # Returns the Pad's read-only id. This is cached.
     def read_only_id
-      @read_only_id ||= @instance.client.getReadOnlyID(@id)[:readOnlyID]
+      @read_only_id ||= @instance.client.getReadOnlyID(padID: @id)[:readOnlyID]
     end
 
     # Returns the time the pad was last edited as a Unix timestamp
     def last_edited
-      @instance.client.getLastEdited(@id)[:lastEdited]
+      @instance.client.getLastEdited(padID: @id)[:lastEdited]
     end
 
     # Returns an array of ids of authors who've edited this pad
     def author_ids
-      @instance.client.listAuthorsOfPad(@id)[:authorIDs] || []
+      @instance.client.listAuthorsOfPad(padID: @id)[:authorIDs] || []
     end
 
     # Returns an array of Authors who've edited this pad
@@ -148,13 +150,13 @@ module EtherpadLite
     # Returns true if this is a public Pad (opposite of private?).
     # This only applies to Pads belonging to a Group.
     def public?
-      @instance.client.getPublicStatus(@id)[:publicStatus]
+      @instance.client.getPublicStatus(padID: @id)[:publicStatus]
     end
 
     # Set the pad's public status to true or false (opposite of private=)
     # This only applies to Pads belonging to a Group.
     def public=(status)
-      @instance.client.setPublicStatus(@id, status)
+      @instance.client.setPublicStatus(padID: @id, publicStatus: status)
     end
 
     # Returns true if this is a private Pad (opposite of public?)
@@ -172,18 +174,18 @@ module EtherpadLite
     # Returns true if this Pad has a password, false if not.
     # This only applies to Pads belonging to a Group.
     def password?
-      @instance.client.isPasswordProtected(@id)[:isPasswordProtected]
+      @instance.client.isPasswordProtected(padID: @id)[:isPasswordProtected]
     end
 
     # Sets the Pad's password.
     # This only applies to Pads belonging to a Group.
     def password=(new_password)
-      @instance.client.setPassword(@id, new_password)
+      @instance.client.setPassword(padID: @id, password: new_password)
     end
 
     # Deletes the Pad
     def delete
-      @instance.client.deletePad(@id)
+      @instance.client.deletePad(padID: @id)
     end
   end
 end

@@ -16,7 +16,7 @@ module EtherpadLite
     # Creates a new Session between a Group and an Author. The session will expire after length_in_min.
     def self.create(instance, group_id, author_id, length_in_min)
       valid_until = Time.now.to_i + length_in_min * 60
-      result = instance.client.createSession(group_id, author_id, valid_until)
+      result = instance.client.createSession(groupID: group_id, authorID: author_id, validUntil: valid_until)
       new instance, result[:sessionID]
     end
 
@@ -64,14 +64,14 @@ module EtherpadLite
 
     # Deletes the Session
     def delete
-      @instance.client.deleteSession(@id)
+      @instance.client.deleteSession(sessionID: @id)
     end
 
     private
 
     # Request and cache session info from the server
     def get_info
-      @info ||= @instance.client.getSessionInfo(@id)
+      @info ||= @instance.client.getSessionInfo(sessionID: @id)
     end
   end
 end

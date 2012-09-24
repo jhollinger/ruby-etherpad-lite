@@ -61,8 +61,8 @@ module EtherpadLite
     # name => Author's name
     def self.create(instance, options={})
       result = options[:mapper] \
-        ? instance.client.createAuthorIfNotExistsFor(options[:mapper], options[:name]) \
-        : instance.client.createAuthor(options[:name])
+        ? instance.client.createAuthorIfNotExistsFor(authorMapper: options[:mapper], name: options[:name]) \
+        : instance.client.createAuthor(options)
       new instance, result[:authorID], options
     end
 
@@ -82,7 +82,7 @@ module EtherpadLite
 
     # Returns an array of pad ids that this author has edited
     def pad_ids
-      @instance.client.listPadsOfAuthor(@id)[:padIDs] || []
+      @instance.client.listPadsOfAuthor(authorID: @id)[:padIDs] || []
     end
 
     # Returns an array of Pads that this author has edited
@@ -97,13 +97,13 @@ module EtherpadLite
 
     # Returns all session ids from this Author
     def session_ids
-      s = @instance.client.listSessionsOfAuthor(@id) || {}
+      s = @instance.client.listSessionsOfAuthor(authorID: @id) || {}
       s.keys
     end
 
     # Returns all sessions from this Author
     def sessions
-      s = @instance.client.listSessionsOfAuthor(@id) || {}
+      s = @instance.client.listSessionsOfAuthor(authorID: @id) || {}
       s.map { |id,info| Session.new(@instance, id, info) }
     end
   end
