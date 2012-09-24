@@ -27,4 +27,11 @@ describe EtherpadLite::Author do
     author.pad_ids.should == []
     author.pads.should == []
   end
+
+  if TEST_CONFIG[:api_version] > 1
+    it "should get the name" do
+      author = @eth.create_author :mapper => 'Author B', :name => 'Jim Jimmers'
+      author.name.should == 'Jim Jimmers'
+    end
+  end
 end

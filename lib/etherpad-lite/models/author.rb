@@ -45,8 +45,6 @@ module EtherpadLite
     attr_reader :instance
     # The author's id
     attr_reader :id
-    # The author's name (if any)
-    attr_reader :name
     # The author's foreign mapper (if any)
     attr_reader :mapper
 
@@ -77,7 +75,11 @@ module EtherpadLite
       @instance = instance
       @id = id
       @mapper = options[:mapper]
-      @name = options[:name]
+    end
+
+    # Returns the author's name
+    def name
+      @name ||= @instance.client.getAuthorName(authorID: @id)
     end
 
     # Returns an array of pad ids that this author has edited

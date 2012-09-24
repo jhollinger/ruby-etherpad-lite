@@ -118,4 +118,11 @@ describe EtherpadLite::Pad do
     @eth.get_pad('another new pad').delete
     @eth.create_pad('another new pad').id.should_not == nil
   end
+
+  if TEST_CONFIG[:api_version] > 1
+    it "should get the pad users" do
+      puts @eth.pad('pad with users').users
+      @eth.pad('pad with users').users.should == []
+    end
+  end
 end

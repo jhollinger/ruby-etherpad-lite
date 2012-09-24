@@ -40,6 +40,16 @@ module EtherpadLite
       Group.create self, options
     end
 
+    # Returns an array of all group IDs
+    def group_ids
+      @client.listAllGroups[:groupIDs]
+    end
+
+    # Returns an array of all Group objects
+    def groups
+      group_ids.map { |id| Group.new self, id }
+    end
+
     # Returns, creating if necessary, a Author mapped to your foreign system's author
     # 
     # Options:

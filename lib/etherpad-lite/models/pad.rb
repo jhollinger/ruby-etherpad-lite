@@ -121,6 +121,11 @@ module EtherpadLite
       revision_numbers.map { |n| Pad.new(@instance, @id, :rev => n) }
     end
 
+    # Returns an array of users hashes, representing users currently using the pad
+    def users
+      @instance.client.padUsers(padID: @id)[:padUsers]
+    end
+
     # Returns the number of users currently editing a pad
     def user_count
       @instance.client.padUsersCount(padID: @id)[:padUsersCount]

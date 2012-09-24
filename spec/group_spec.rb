@@ -81,6 +81,19 @@ describe EtherpadLite::Group do
     pad.text.should == "abc\n"
   end
 
+  if TEST_CONFIG[:api_version] > 1
+    it "should list all group ids" do
+      group_ids = @eth.group_ids
+      group_ids.size.should == 4
+    end
+
+    it "should list all groups" do
+      groups = @eth.groups
+      groups.size.should == 4
+      groups.first.class.name.should == 'EtherpadLite::Group'
+    end
+  end
+
   context 'Group Pad' do
     context 'Privacy' do
       it "should be private" do
