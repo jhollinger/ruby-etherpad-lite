@@ -31,7 +31,7 @@ module EtherpadLite
     Client.new(url_or_port, api_key_or_file, api_version)
   end
 
-  # A thin wrapper around Etherpad Lite's HTTP JSON API.
+  # A thin wrapper around Etherpad Lite's HTTP JSON API. See the API documentation at https://github.com/Pita/etherpad-lite/wiki/HTTP-API.
   class Client
     # A URI object containing the URL of the Etherpad Lite instance
     attr_reader :uri
@@ -51,7 +51,7 @@ module EtherpadLite
 
     # Call an API method
     def method_missing(method, params={})
-      request = method =~ /^((set)|(create)|(delete))/ \
+      request = method =~ /^(set|create|delete)/ \
         ? ->(url, params) { RestClient.post(url, params) } \
         : ->(url, params) { RestClient.get(url, :params => params) }
       call(method, params, &request)
