@@ -27,7 +27,7 @@ module EtherpadLite
   #  client = EtherpadLite.client('https://etherpad.yoursite.com', 'your api key', '1.1')
   # 
   #  client = EtherpadLite.client(9001, 'your api key', '1.1') # Alias to http://localhost:9001
-  def self.client(url_or_port, api_key_or_file, api_version)
+  def self.client(url_or_port, api_key_or_file, api_version=1)
     Client.new(url_or_port, api_key_or_file, api_version)
   end
 
@@ -42,7 +42,7 @@ module EtherpadLite
 
     # Instantiate a new Etherpad Lite Client. You may pass a full url or just a port number. The api key may be a string
     # or a File object. If you do not specify an API version, it will default to the latest version that is supported.
-    def initialize(url_or_port, api_key_or_file, api_version)
+    def initialize(url_or_port, api_key_or_file, api_version=1)
       url_or_port = "http://localhost:#{url_or_port}" if url_or_port.is_a? Integer
       @uri = URI.parse(url_or_port)
       @api_key = api_key_or_file.is_a?(IO) ? api_key_or_file.read : api_key_or_file
