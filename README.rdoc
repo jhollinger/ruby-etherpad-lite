@@ -34,8 +34,6 @@ See {github.com/Pita/etherpad-lite}[https://github.com/Pita/etherpad-lite] for i
       puts pad_rev.text
     end
 
-Full docs are at {rubydoc.info/gems/etherpad-lite/frames}[http://rubydoc.info/gems/etherpad-lite/frames]
-
 == Advanced usage
 The above example deals with public pads, accessible to anyone through the Web UI. There is another class of pads - group pads - which deal with groups, authors and sessions.
 Examples are documented in EtherpadLite::Group, EtherpadLite::Author, and EtherpadLite::Session.
