@@ -12,7 +12,7 @@ Gem::Specification.new do |spec|
 
   spec.require_paths = ['lib']
   spec.extra_rdoc_files = %w{README.rdoc}
-  spec.files = [Dir.glob('lib/**/*'), Dir.glob('spec/**/*'), 'README.rdoc', 'CHANGELOG', 'LICENSE'].flatten
+  spec.files = [Dir.glob('lib/**/*'), 'README.rdoc', 'CHANGELOG', 'LICENSE'].flatten
 
   spec.specification_version = Gem::Specification::CURRENT_SPECIFICATION_VERSION if spec.respond_to? :specification_version
 
