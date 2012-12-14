@@ -1,4 +1,8 @@
-** RELEASE 0.2.0 (?) **
+** RELEASE 0.2.1 (2012-12-13) **
+
+* Support for the Etherpad Lite 1.2 release
+
+** RELEASE 0.2.0 (2012-09-29) **
 
 * Adds support for multiple API versions
 * Use rest_client
