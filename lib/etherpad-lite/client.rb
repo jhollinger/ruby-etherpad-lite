@@ -4,7 +4,7 @@ require 'rest_client'
 
 # A client library for Etherpad Lite's JSON API. 
 # 
-# A thin wrapper around the HTTP API. See the API documentation at https://github.com/Pita/etherpad-lite/wiki/HTTP-API.
+# A thin wrapper around the HTTP API. See the API documentation at http://etherpad.org/doc/v1.2.0/#index_api_methods.
 # 
 #  client = EtherpadLite.client('http://localhost:9001', 'api key', '1.1')
 #  client.getText(:padID => 'foo')
@@ -31,7 +31,7 @@ module EtherpadLite
     Client.new(url_or_port, api_key_or_file, api_version)
   end
 
-  # A thin wrapper around Etherpad Lite's HTTP JSON API. See the API documentation at https://github.com/Pita/etherpad-lite/wiki/HTTP-API.
+  # A thin wrapper around Etherpad Lite's HTTP JSON API. See the API documentation at http://etherpad.org/doc/v1.2.0/#index_api_methods.
   class Client
     # A URI object containing the URL of the Etherpad Lite instance
     attr_reader :uri
