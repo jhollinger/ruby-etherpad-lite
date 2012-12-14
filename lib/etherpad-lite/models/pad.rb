@@ -188,6 +188,11 @@ module EtherpadLite
       @instance.client.setPassword(padID: @id, password: new_password)
     end
 
+    # Sends a custom message of type msg to the pad.
+    def message(msg)
+      @instance.client.sendClientsMessage(padID: @id, msg: msg)
+    end
+
     # Deletes the Pad
     def delete
       @instance.client.deletePad(padID: @id)

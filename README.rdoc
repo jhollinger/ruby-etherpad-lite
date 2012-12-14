@@ -2,7 +2,7 @@
 
 The etherpad-lite Ruby Gem is a Ruby client for Etherpad Lite's HTTP JSON API. Etherpad Lite is a collaborative editor provided by the {Etherpad Foundation}[http://etherpad.org].
 
-See {github.com/Pita/etherpad-lite}[https://github.com/Pita/etherpad-lite] for information on how to install and configure your own Etherpad Lite instance, and read {github.com/Pita/etherpad-lite/wiki/HTTP-API}[https://github.com/Pita/etherpad-lite/wiki/HTTP-API] for an in-depth description of Etherpad Lite's HTTP API.
+See {github.com/ether/etherpad-lite}[https://github.com/ether/etherpad-lite] for information on how to install and configure your own Etherpad Lite instance, and read {etherpad.org/doc/v1.2.0/#index_http_api}[http://etherpad.org/doc/v1.2.0/#index_http_api] for an in-depth description of Etherpad Lite's HTTP API.
 
 == Installation
     gem install etherpad-lite
@@ -99,7 +99,7 @@ or you can explicitly load just the low-level client:
     client = EtherpadLite.client('http://beta.etherpad.org/api', 'api key', 1.1)
     client.setText(padID: 'my first etherpad lite pad', text: "lots of new text and stuff")
 
-The methods and parameters exactly match the HTTP API. For a full list of them, see {github.com/Pita/etherpad-lite/wiki/HTTP-API}[https://github.com/Pita/etherpad-lite/wiki/HTTP-API].
+The methods and parameters exactly match the HTTP API. For a full list of them, see {etherpad.org/doc/v1.2.0/#index_http_api}[http://etherpad.org/doc/v1.2.0/#index_http_api].
 
 == Testing
 Testing this library is fairly simple. It requires:
