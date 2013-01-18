@@ -52,6 +52,8 @@ module EtherpadLite
       if options[:groupID]
         @group_id = options[:groupID]
         @id = "#{@group_id}$#{@id}" unless @id =~ Group::GROUP_ID_REGEX
+      elsif @id =~ Group::GROUP_ID_REGEX
+        @group_id = id.split('$').first
       end
       @group = options[:group]
       @rev = options[:rev]

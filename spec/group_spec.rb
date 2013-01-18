@@ -81,7 +81,7 @@ describe EtherpadLite::Group do
     pad.text.should == "abc\n"
   end
 
-  if TEST_CONFIG[:api_version] > 1
+  if TEST_CONFIG[:api_version].to_s > '1'
     it "should list all group ids" do
       group_ids = @eth.group_ids
       group_ids.size.should == 4

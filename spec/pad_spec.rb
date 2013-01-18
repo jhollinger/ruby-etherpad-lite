@@ -27,6 +27,10 @@ describe EtherpadLite::Pad do
     e.message.should == 'padID does already exist'
   end
 
+  it "should list all pad ids" do
+    @eth.pad_ids.should == ["my_new_pad"]
+  end
+
   it "should automatically create a Pad" do
     pad = @eth.pad 'another new pad'
     pad.text = "The initial text"
@@ -119,7 +123,7 @@ describe EtherpadLite::Pad do
     @eth.create_pad('another new pad').id.should_not == nil
   end
 
-  if TEST_CONFIG[:api_version] > 1
+  if TEST_CONFIG[:api_version].to_s > '1'
     it "should get the pad users" do
       puts @eth.pad('pad with users').users
       @eth.pad('pad with users').users.should == []

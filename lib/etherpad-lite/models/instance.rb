@@ -20,6 +20,16 @@ module EtherpadLite
       @client = Client.new(url_or_port, api_key_or_file, api_version)
     end
 
+    # Returns an array of all pad IDs
+    def pad_ids
+      @client.listAllPads[:padIDs]
+    end
+
+    # Returns an array of all Pad objects
+    def pads
+      pad_ids.map { |id| Pad.new self, id }
+    end
+
     # Returns, creating if necessary, a Group mapped to your foreign system's group
     def group(mapper)
       create_group(:mapper => mapper)
