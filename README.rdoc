@@ -13,7 +13,7 @@ See {github.com/ether/etherpad-lite}[https://github.com/ether/etherpad-lite] for
     require 'etherpad-lite'
 
     # Connect to your Etherpad Lite instance
-    ether = EtherpadLite.connect('http://etherpad-lite.example.com', 'the api key', 1.1)
+    ether = EtherpadLite.connect('http://etherpad-lite.example.com', 'the api key', '1.2.1')
 
     # Get a Pad (or create one if it doesn't exist)
     pad = ether.pad('my first etherpad lite pad')
