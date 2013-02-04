@@ -152,6 +152,16 @@ module EtherpadLite
       author_ids.map { |id| Author.new(@instance, id) }
     end
 
+    # Returns an array of chat message Hashes
+    def chat_messages
+      @instance.client.getChatHistory(padID: @id)[:messages]
+    end
+
+    # Returns the number of chat messages
+    def chat_size
+      @instance.client.getChatHead(padID: @id)[:chatHead] + 1
+    end
+
     # Returns true if this is a public Pad (opposite of private?).
     # This only applies to Pads belonging to a Group.
     def public?

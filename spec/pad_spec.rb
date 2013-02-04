@@ -125,8 +125,17 @@ describe EtherpadLite::Pad do
 
   if TEST_CONFIG[:api_version].to_s > '1'
     it "should get the pad users" do
-      puts @eth.pad('pad with users').users
       @eth.pad('pad with users').users.should == []
+    end
+  end
+
+  if TEST_CONFIG[:api_version].to_s > '1.2.1'
+    it "should list the chart history" do
+      @eth.pad('chatty pad').chat_messages.should == []
+    end
+
+    it "should list the chart head" do
+      @eth.pad('chatty pad').chat_size.should == 0
     end
   end
 end
