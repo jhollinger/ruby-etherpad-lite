@@ -153,8 +153,12 @@ module EtherpadLite
     end
 
     # Returns an array of chat message Hashes
-    def chat_messages
-      @instance.client.getChatHistory(padID: @id)[:messages]
+    def chat_messages(start_index=nil, end_index=nil)
+      messages = @instance.client.getChatHistory(:padID => @id, :start => start_index, :end => end_index)[:messages]
+      messages.map do |msg|
+        attrs = {padID: @id}.merge(msg)
+        ChatMessage.new(@instance, attrs)
+      end
     end
 
     # Returns the number of chat messages

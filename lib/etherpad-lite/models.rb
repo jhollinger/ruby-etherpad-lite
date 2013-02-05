@@ -1,6 +1,7 @@
 require 'etherpad-lite/models/padded'
 require 'etherpad-lite/models/instance'
 require 'etherpad-lite/models/pad'
+require 'etherpad-lite/models/chat_message'
 require 'etherpad-lite/models/group'
 require 'etherpad-lite/models/author'
 require 'etherpad-lite/models/session'
