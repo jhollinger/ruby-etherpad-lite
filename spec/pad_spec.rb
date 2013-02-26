@@ -28,7 +28,7 @@ describe EtherpadLite::Pad do
   end
 
   it "should list all pad ids" do
-    @eth.pad_ids.should == ["my_new_pad"]
+    @eth.pad_ids.last.should == "my_new_pad"
   end
 
   it "should automatically create a Pad" do

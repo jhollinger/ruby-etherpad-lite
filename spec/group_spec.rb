@@ -84,12 +84,12 @@ describe EtherpadLite::Group do
   if TEST_CONFIG[:api_version].to_s > '1'
     it "should list all group ids" do
       group_ids = @eth.group_ids
-      group_ids.size.should == 4
+      group_ids.size.should == 2
     end
 
     it "should list all groups" do
       groups = @eth.groups
-      groups.size.should == 4
+      groups.size.should == 2
       groups.first.class.name.should == 'EtherpadLite::Group'
     end
   end
