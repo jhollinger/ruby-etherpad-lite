@@ -64,8 +64,13 @@ module EtherpadLite
     def call(api_method, params={}, &request)
       params[:apikey] = @api_key
       url = [@uri.to_s, 'api', self.api_version, api_method].compact.join('/')
-      json = request.(url, params).to_s
-      response = JSON.parse(json, :symbolize_names => true)
+
+      begin
+        json = request.(url, params).to_s
+        response = JSON.parse(json, :symbolize_names => true)
+      rescue JSON::ParserError => e
+        raise Error, "Unable to parse JSON response: #{json}"
+      end
 
       case response[:code]
         when 0 then response[:data]
