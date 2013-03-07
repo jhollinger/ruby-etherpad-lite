@@ -27,7 +27,7 @@ module EtherpadLite
   #  client = EtherpadLite.client('https://etherpad.yoursite.com', 'your api key', '1.1')
   # 
   #  client = EtherpadLite.client(9001, 'your api key', '1.1') # Alias to http://localhost:9001
-  def self.client(url_or_port, api_key_or_file, api_version=1)
+  def self.client(url_or_port, api_key_or_file, api_version=nil)
     Client.new(url_or_port, api_key_or_file, api_version)
   end
 
@@ -41,33 +41,34 @@ module EtherpadLite
     attr_reader :api_version
 
     # Instantiate a new Etherpad Lite Client. You may pass a full url or just a port number. The api key may be a string
-    # or a File object. If you do not specify an API version, it will default to the latest version that is supported.
-    def initialize(url_or_port, api_key_or_file, api_version=1)
+    # or a File object. If you do not specify an API version, it will default to the latest version.
+    def initialize(url_or_port, api_key_or_file, api_version=nil)
       url_or_port = "http://localhost:#{url_or_port}" if url_or_port.is_a? Integer
       @uri = URI.parse(url_or_port)
       @api_key = api_key_or_file.is_a?(IO) ? api_key_or_file.read : api_key_or_file
-      @api_version = api_version.to_s
+      @api_version = api_version ? api_version.to_s : current_api_version
     end
 
     # Call an API method
     def method_missing(method, params={})
-      request = method =~ /^(set|create|delete)/ \
-        ? ->(url, params) { RestClient.post(url, params) } \
-        : ->(url, params) { RestClient.get(url, :params => params) }
-      call(method, params, &request)
+      call(method, params)
     end
 
     private
 
+    # Returns the latest api version. Defaults to "1" if anything goes wrong.
+    def current_api_version
+      JSON.parse(get('/api').to_s)['currentVersion']# rescue 1
+    end
+
     # Calls the EtherpadLite API and returns the :data portion of the response Hash.
     # If the API response contains an error code, an exception is raised.
     def call(api_method, params={}, &request)
-      params[:apikey] = @api_key
-      url = [@uri.to_s, 'api', self.api_version, api_method].compact.join('/')
+      path = "/api/#{api_version}/#{api_method}"
 
       begin
-        json = request.(url, params).to_s
-        response = JSON.parse(json, :symbolize_names => true)
+        result = api_method =~ /^(set|create|delete)/ ? post(path, params) : get(path, params)
+        response = JSON.parse(result.to_s, :symbolize_names => true)
       rescue JSON::ParserError => e
         raise Error, "Unable to parse JSON response: #{json}"
       end
@@ -77,6 +78,18 @@ module EtherpadLite
         when (1..4) then raise Error, response[:message]
         else raise Error, "An unknown error ocurrced while handling the API response: #{response.to_s}"
       end
+    end
+
+    # Makes a GET request
+    def get(path, params={})
+      params[:apikey] = self.api_key
+      RestClient.get("#{self.uri}#{path}", :params => params)
+    end
+
+    # Makes a POST request
+    def post(path, params={})
+      params[:apikey] = self.api_key
+      RestClient.post("#{self.uri}#{path}", params)
     end
   end
 end
