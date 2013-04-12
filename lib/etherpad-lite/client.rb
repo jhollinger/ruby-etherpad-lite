@@ -46,7 +46,7 @@ module EtherpadLite
       url_or_port = "http://localhost:#{url_or_port}" if url_or_port.is_a? Integer
       @uri = URI.parse(url_or_port)
       @api_key = api_key_or_file.is_a?(IO) ? api_key_or_file.read : api_key_or_file
-      @api_version = api_version ? api_version.to_s : current_api_version
+      @api_version = api_version ? api_version.to_s : current_api_version.to_s
     end
 
     # Call an API method
@@ -58,7 +58,7 @@ module EtherpadLite
 
     # Returns the latest api version. Defaults to "1" if anything goes wrong.
     def current_api_version
-      JSON.parse(get('/api').to_s)['currentVersion']# rescue 1
+      JSON.parse(get('/api').to_s)['currentVersion'] rescue 1
     end
 
     # Calls the EtherpadLite API and returns the :data portion of the response Hash.
