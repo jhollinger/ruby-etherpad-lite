@@ -39,7 +39,7 @@ The above example deals with public pads, accessible to anyone through the Web U
 Examples are documented in EtherpadLite::Group, EtherpadLite::Author, and EtherpadLite::Session.
 
 == Example use in Rails
-For your view, I recommend the jQuery plugin at {github.com/johnyma22/etherpad-lite-jquery-plugin}[https://github.com/johnyma22/etherpad-lite-jquery-plugin].
+For your view, I recommend the jQuery plugin at {github.com/ether/etherpad-lite-jquery-plugin}[https://github.com/ether/etherpad-lite-jquery-plugin].
 Also, I recommend reading the docs for EtherpadLite::Group first.
 
 Add the following to your Gemfile
