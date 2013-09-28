@@ -1,3 +1,11 @@
+** RELEASE 0.3.0 (2013-08-27) **
+
+* 100th commit, woot!
+* Target version 1.2.8 of API
+* Added EtherpadLite::API_VERSION constant to reflect the above
+* Added EtherpadLite::Pad#diff (EtherpadLite::Diff)
+* Added EtherpadLite::Pad#changeset
+
 ** RELEASE 0.2.3 (2013-04-11) **
 
 * Add support for Chat API
