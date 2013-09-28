@@ -6,7 +6,7 @@ Gem::Specification.new do |spec|
   spec.summary = "A Ruby client library for Etherpad Lite"
   spec.description = "etherpad-lite is a Ruby interface to Etherpad Lite's HTTP JSON API"
   spec.authors = ['Jordan Hollinger']
-  spec.date = '2013-04-11'
+  spec.date = '2013-09-27'
   spec.email = 'jordan@jordanhollinger.com'
   spec.homepage = 'http://github.com/jhollinger/ruby-etherpad-lite'
 

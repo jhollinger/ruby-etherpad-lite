@@ -1,4 +1,6 @@
 module EtherpadLite
-  # The library version
-  VERSION = '0.2.3'
+  # Library version
+  VERSION = '0.3.0'
+  # API target version
+  API_VERSION = '1.2.8'
 end

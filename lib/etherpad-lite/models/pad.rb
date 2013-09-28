@@ -121,6 +121,16 @@ module EtherpadLite
       revision_numbers.map { |n| Pad.new(@instance, @id, :rev => n) }
     end
 
+    # Returns a Diff. If end_rev is not specified, the latest revision will be used
+    def diff(start_rev, end_rev=nil)
+      Diff.new(self, start_rev, end_rev)
+    end
+
+    # Returns the changeset for the given revision
+    def changeset(rev)
+      @instance.client.getRevisionChangeset(padID: @id, rev: rev)
+    end
+
     # Returns an array of users hashes, representing users currently using the pad
     def users
       @instance.client.padUsers(padID: @id)[:padUsers]
