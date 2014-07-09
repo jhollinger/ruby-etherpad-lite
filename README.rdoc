@@ -74,7 +74,7 @@ Some example controller actions:
       @group = ether.get_group(params[:ep_group_id])
       @pad = @group.pad(params[:ep_pad_name])
       # Map the user to an EtherpadLite Author
-      author = ether.author("my_app_user_#{current_user.id}", :name => current_user.name)
+      author = ether.author("my_app_user_#{current_user.id}", name: current_user.name)
       # Get or create an hour-long session for this Author in this Group
       sess = session[:ep_sessions][@group.id] ? ether.get_session(session[:ep_sessions][@group.id]) : @group.create_session(author, 60)
       if sess.expired?
@@ -83,7 +83,7 @@ Some example controller actions:
       end
       session[:ep_sessions][@group.id] = sess.id
       # Set the EtherpadLite session cookie. This will automatically be picked up by the jQuery plugin's iframe.
-      cookies[:sessionID] = {:value => sess.id, :domain => ".yourdomain.com"}
+      cookies[:sessionID] = {value: sess.id, domain: ".yourdomain.com"}
     end
   end
 
