@@ -47,6 +47,12 @@ module EtherpadLite
       @uri = URI.parse(url_or_port)
       @api_key = api_key_or_file.is_a?(IO) ? api_key_or_file.read : api_key_or_file
       @api_version = api_version ? api_version.to_s : current_api_version.to_s
+      @ssl_verify = OpenSSL::SSL::VERIFY_PEER
+    end
+
+    # Whether peer must be verified if the API URL is SSL
+    def ssl_verify(mode)
+      @ssl_verify = mode
     end
 
     # Call an API method
@@ -83,13 +89,24 @@ module EtherpadLite
     # Makes a GET request
     def get(path, params={})
       params[:apikey] = self.api_key
-      RestClient.get("#{self.uri}#{path}", :params => params)
+      RestClient::Request.execute(
+        :method  => :get,
+        :url     => "#{self.uri}#{path}",
+        :headers => {
+          :params => params
+        },
+        :verify_ssl=> @ssl_verify )
     end
 
     # Makes a POST request
     def post(path, params={})
       params[:apikey] = self.api_key
-      RestClient.post("#{self.uri}#{path}", params)
+      RestClient::Request.execute(
+        :method => :post,
+        :url    => "#{self.uri}#{path}",
+        :headers=> {},
+        :payload=> params,
+        :verify_ssl=> @ssl_verify )
     end
   end
 end
